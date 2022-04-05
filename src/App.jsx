@@ -1,0 +1,33 @@
+import Product from "./pages/Product";
+import Home from "./pages/Home";
+import ProductList from "./pages/ProductList";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Cart from "./pages/Cart";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+
+import List from "./pages/admin/list/List";
+import Admin from "./pages/Admin";
+import ProductAdmin from "./components/admin/products/Product";
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route element={<Home />} path="/" />
+        <Route element={<Register />} path="/register" />
+        <Route element={<Login />} path="/login" />
+        <Route element={<Cart />} path="/cart" />
+        <Route element={<ProductList />} path="/product-list" />
+        <Route element={<Product />} path="/product-details" />
+        <Route element={<Admin />} path="/admin" />
+        <Route element={<List />} path="/admin/users" />
+        <Route element={<ProductAdmin />} path="/admin/products" />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
