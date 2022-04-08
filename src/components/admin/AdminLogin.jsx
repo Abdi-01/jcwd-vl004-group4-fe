@@ -104,7 +104,7 @@ const AdminLogin = () => {
           className="mb-4"
           onClick={formik.handleSubmit}
         >
-          Register
+          Sign In
         </Button>
         <Footer>
           Need an account?{" "}
