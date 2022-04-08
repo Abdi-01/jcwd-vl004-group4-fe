@@ -49,7 +49,7 @@ const Footer = styled.div`
   font-size: 16px;
 `;
 
-const Login = () => {
+const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
@@ -65,7 +65,7 @@ const Login = () => {
   return (
     <Container>
       <Wrapper>
-        <Title>Sign In</Title>
+        <Title>Admin Sign In</Title>
         <TextField
           fullWidth
           id="outlined-basic"
@@ -117,4 +117,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;
