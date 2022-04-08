@@ -1,3 +1,5 @@
+import "bootstrap/dist/css/bootstrap.css";
+
 import Product from "./pages/Product";
 import Home from "./pages/Home";
 import ProductList from "./pages/ProductList";
@@ -5,16 +7,17 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import MyNavbar from "./components/MyNavbar";
 
 import List from "./pages/admin/list/List";
 import Admin from "./pages/Admin";
 import ProductAdmin from "./components/admin/products/Product";
+import AdminLogin from "./components/admin/AdminLogin";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar />
+      <MyNavbar />
       <Routes>
         <Route element={<Home />} path="/" />
         <Route element={<Register />} path="/register" />
@@ -23,6 +26,7 @@ const App = () => {
         <Route element={<ProductList />} path="/product-list" />
         <Route element={<Product />} path="/product-details" />
         <Route element={<Admin />} path="/admin" />
+        <Route element={<AdminLogin />} path="/admin/login" />
         <Route element={<List />} path="/admin/users" />
         <Route element={<ProductAdmin />} path="/admin/products" />
       </Routes>
