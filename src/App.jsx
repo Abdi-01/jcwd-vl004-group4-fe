@@ -12,7 +12,7 @@ import MyNavbar from "./components/MyNavbar";
 import List from "./pages/admin/list/List";
 import Admin from "./pages/Admin";
 import ProductAdmin from "./components/admin/products/Product";
-import AdminLogin from "./components/admin/AdminLogin";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 const App = () => {
   return (
