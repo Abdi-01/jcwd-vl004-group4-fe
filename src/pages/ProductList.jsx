@@ -1,9 +1,20 @@
 import styled from "styled-components";
+import Product from "../components/Product";
 import Products from "../components/Products";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import URL from '../helpers/URL'
 
 const Container = styled.div``;
+
+const ContainerProduct = styled.div`
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+`;
 
 const Title = styled.h1`
   margin: 20px;
@@ -34,6 +45,20 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
+
+  // contain all products data
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const getProductsData = async () => {
+      const { data } = await axios.get(`${URL}products/get-all-products`)
+      console.log(data)
+      setProducts(data)
+    }
+    getProductsData()
+  }, [])
+
+  console.log(products)
   return (
     <Container>
       <Title>Dresses</Title>
@@ -71,7 +96,12 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-      <Products />
+      {/* <Products products={products} /> */}
+      <ContainerProduct>
+        {products.map(product => (
+          <Product product={product} key={product.id} />
+        ))}
+      </ContainerProduct>
       <Footer />
     </Container>
   );

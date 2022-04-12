@@ -2,6 +2,10 @@ import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
+import URL from '../helpers/URL'
+import { useEffect, useState } from 'react'
 
 const Container = styled.div``;
 
@@ -113,6 +117,12 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+
+  const params = useParams()
+  console.log(params.id)
+
+  axios.get(`${URL}get-product-byId/${params.id}`)
+
   return (
     <Container>
       <Wrapper>
