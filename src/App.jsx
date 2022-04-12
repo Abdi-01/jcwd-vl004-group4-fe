@@ -94,7 +94,7 @@ const App = (props) => {
 
         <Route element={<ProductList />} path="/product-list" />
 
-        <Route element={<Product />} path="/product-details/:id" />
+        <Route element={<Product />} path="/product-detail/:productId" />
 
         <Route element={<Admin />} path="/admin" />
         <Route element={<AdminLogin />} path="/admin/login" />
