@@ -52,6 +52,7 @@ const ProductList = () => {
   useEffect(() => {
     const getProductsData = async () => {
       const { data } = await axios.get(`${API_URL}/products/get-all-products`)
+
       console.log(data)
       setProducts(data)
     }

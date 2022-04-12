@@ -5,6 +5,7 @@ import { mobile } from "../responsive";
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { API_URL } from '../constants/API'
+
 import { useEffect, useState } from 'react'
 
 const Container = styled.div``;
@@ -122,6 +123,7 @@ const Product = () => {
   console.log(params.id)
 
   axios.get(`${API_URL}/get-product-byId/${params.id}`)
+
 
   return (
     <Container>
