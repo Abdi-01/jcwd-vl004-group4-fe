@@ -10,10 +10,11 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-
 import { Link, useNavigate } from "react-router-dom";
+import Axios from "axios";
+import { API_URL } from "../constants/API";
 import Swal from "sweetalert2";
-import { mobile } from "../responsive";
+// import { mobile } from "../responsive";
 
 const Container = styled.div`
   width: 100vw;
@@ -54,7 +55,6 @@ const Footer = styled.div`
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -78,7 +78,22 @@ const Register = () => {
         .required("Password required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
+      Axios.post(`${API_URL}/users/register`, values)
+        .then((res) => {
+          Swal.fire({
+            text: res.data.message,
+            icon: "success",
+          });
+          navigate("/");
+        })
+        .catch((err) => {
+          Swal.fire({
+            text: err.response.data,
+            icon: "error",
+          });
+          // console.log(err.response.data);
+        });
     },
   });
 

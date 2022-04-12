@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import {
   TextField,
   Button,
@@ -11,13 +10,10 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Swal from "sweetalert2";
-
+import { useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../constants/API";
-import { Link, useNavigate } from "react-router-dom";
-import { authUserLogin } from "../redux/actions/userAction";
-import { connect } from "react-redux";
+import Swal from "sweetalert2";
 
 const Container = styled.div`
   width: 100vw;
@@ -50,44 +46,40 @@ const Title = styled.h1`
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
+  text-align: center;
 `;
 
-const Footer = styled.div`
-  font-size: 16px;
-`;
-
-const Login = (props) => {
-  const [isLogin, setIsLogin] = useState(false);
+const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
+  const { token } = useParams();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid Email Address")
-        .required("Email required"),
-      password: Yup.string().required("Password Required"),
+      password: Yup.string()
+        .matches(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/,
+          "Password must contain at least eight characters, at least one number and both lower and uppercase letters, and special characters"
+        )
+        .required("Password required"),
     }),
     onSubmit: (values) => {
-      // console.log(values);
-      Axios.post(`${API_URL}/users/login`, values)
+      //   console.log(values);
+      Axios.patch(`${API_URL}/users/reset-password`, values, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
         .then((res) => {
-          localStorage.setItem("token_shutter", JSON.stringify(res.data.token));
-          props.authUserLogin(res.data.dataLogin);
-          setIsLogin(true);
-          setResMsg(res.data.message);
+          Swal.fire({
+            icon: "success",
+            title: res.data.message,
+          });
+          navigate("/login");
         })
         .catch((err) => {
-          // console.log(err.response.data.message)
-          Swal.fire({
-            title: err.response.data.message,
-            icon: "error",
-          });
+          console.log(err);
         });
     },
   });
@@ -95,41 +87,10 @@ const Login = (props) => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
-  const alreadyLogin = () => {
-    if (isLogin) {
-      let timerInterval;
-      Swal.fire({
-        icon: "success",
-        title: resMsg,
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      }).then((result) => {
-        navigate("/");
-      });
-    }
-  };
-
   return (
     <Container>
-      {alreadyLogin()}
       <Wrapper>
-        <Title>Sign In</Title>
-        <TextField
-          fullWidth
-          id="outlined-basic"
-          label="Email"
-          className="mb-3"
-          name="email"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
+        <Title>Enter your new password</Title>
         <TextField
           fullWidth
           id="outlined-basic"
@@ -161,22 +122,11 @@ const Login = (props) => {
           className="mb-3"
           onClick={formik.handleSubmit}
         >
-          Sign In
+          Submit
         </Button>
-        <Footer>
-          <Link to="/forget-password" style={{ textDecoration: "none" }}>
-            Forgotten password?
-          </Link>
-        </Footer>
-        <Footer>
-          Need an account?{" "}
-          <Link to="/register" style={{ textDecoration: "none" }}>
-            Register
-          </Link>
-        </Footer>
       </Wrapper>
     </Container>
   );
 };
 
-export default connect(null, { authUserLogin })(Login);
+export default ResetPassword;
