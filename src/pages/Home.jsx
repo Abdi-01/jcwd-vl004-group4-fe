@@ -5,7 +5,7 @@ import Product from "../components/Product";
 import Slider from "../components/Slider";
 import styled from "styled-components";
 import axios from 'axios'
-import URL from '../helpers/URL'
+import { API_URL } from '../constants/API'
 
 const ContainerProduct = styled.div`
     padding: 20px;
@@ -20,7 +20,7 @@ const Home = () => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const { data } = await axios.get(`${URL}products/get-all-products`)
+      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
       console.log(data)
       setProducts(data)
     }

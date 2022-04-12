@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import styled from "@emotion/styled";
 import {
   TextField,
@@ -11,6 +12,10 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { API_URL } from "../../constants/API";
+import Axios from "axios";
+import { authAdminLogin } from "../../redux/actions/adminAction";
+import { connect } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -19,7 +24,7 @@ const Container = styled.div`
       rgba(255, 255, 255, 0.4),
       rgba(255, 255, 255, 0.4)
     ),
-    url("https://images.unsplash.com/photo-1576602976047-174e57a47881?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2069&q=80")
+    url("https://images.unsplash.com/photo-1586015555751-63bb77f4322a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80")
       center;
   background-size: cover;
   display: flex;
@@ -49,29 +54,83 @@ const Footer = styled.div`
   font-size: 16px;
 `;
 
-const AdminLogin = () => {
+const AdminLogin = (props) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [resMsg, setResMsg] = useState("");
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid Email Address")
+        .required("Email required"),
+      password: Yup.string().required("Password Required"),
+    }),
+    onSubmit: (values) => {
+      // console.log(values);
+      Axios.post(`${API_URL}/admin/login`, values)
+        .then((res) => {
+          localStorage.setItem(
+            "token_shutter_admin",
+            JSON.stringify(res.data.token)
+          );
+          props.authAdminLogin(res.data.dataLogin);
+          console.log(res.data.dataLogin);
+          setIsLogin(true);
+          setResMsg(res.data.message);
+        })
+        .catch((err) => {
+          // console.log(err.response.data.message)
+          Swal.fire({
+            title: err.response.data.message,
+            icon: "error",
+          });
+        });
+    },
   });
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
+  const alreadyLogin = () => {
+    if (isLogin) {
+      let timerInterval;
+      Swal.fire({
+        icon: "success",
+        title: resMsg,
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        navigate("/admin");
+      });
+    }
+  };
+
   return (
     <Container>
+      {alreadyLogin()}
       <Wrapper>
-        <Title>Admin Sign In</Title>
+        <Title>Admin</Title>
         <TextField
           fullWidth
           id="outlined-basic"
           label="Email"
           className="mb-3"
           name="email"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
         />
         <TextField
           fullWidth
@@ -104,12 +163,11 @@ const AdminLogin = () => {
           className="mb-4"
           onClick={formik.handleSubmit}
         >
-          Register
+          Sign In
         </Button>
         <Footer>
-          Need an account?{" "}
-          <Link to="/register" style={{ color: "#026670" }}>
-            Register
+          <Link to="/admin/forget-password" style={{ textDecoration: "none" }}>
+            Forgotten password?
           </Link>
         </Footer>
       </Wrapper>
@@ -117,4 +175,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default connect(null, { authAdminLogin })(AdminLogin);

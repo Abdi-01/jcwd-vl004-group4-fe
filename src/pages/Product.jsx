@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import URL from '../helpers/URL'
+import { API_URL } from '../constants/API'
 import { useEffect, useState } from 'react'
 
 const Container = styled.div``;
@@ -121,7 +121,7 @@ const Product = () => {
   const params = useParams()
   console.log(params.id)
 
-  axios.get(`${URL}get-product-byId/${params.id}`)
+  axios.get(`${API_URL}/get-product-byId/${params.id}`)
 
   return (
     <Container>
