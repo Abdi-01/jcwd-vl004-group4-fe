@@ -5,7 +5,9 @@ import {
   ShoppingCartOutlined,
 } from "@material-ui/icons";
 import styled from "styled-components";
-import URL from '../helpers/URL'
+
+import { API_URL } from '../constants/API'
+
 
 const Info = styled.div`
   opacity: 0;
@@ -73,7 +75,9 @@ const Product = ({ product }) => {
   return (
     <Container as={Link} to={`product-details/${product.id}`}>
       <Circle />
-      <Image src={`${URL}${product.image}`} />
+
+      <Image src={`${API_URL}/${product.image}`} />
+
       <Info>
         <Icon>
           <ShoppingCartOutlined />

@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import URL from '../helpers/URL'
+import { API_URL } from "../constants/API";
 
 const Container = styled.div``;
 
@@ -51,7 +51,8 @@ const ProductList = () => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const { data } = await axios.get(`${URL}products/get-all-products`)
+      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
+
       console.log(data)
       setProducts(data)
     }
