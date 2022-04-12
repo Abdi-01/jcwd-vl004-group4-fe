@@ -1,14 +1,12 @@
 import "./single.scss";
 import Sidebar from "../../../components/admin/sidebar/Sidebar";
-import NavbarAdmin from "../../../components/admin/navbar/NavbarAdmin";
 import List from "../../../components/admin/table/Table";
 
-const Single = () => {
+const Profile = () => {
   return (
     <div className="single">
       <Sidebar />
       <div className="singleContainer">
-        <NavbarAdmin />
         <div className="top">
           <div className="left">
             <div className="editButton">Edit</div>
@@ -52,4 +50,4 @@ const Single = () => {
   );
 };
 
-export default Single;
+export default Profile;
