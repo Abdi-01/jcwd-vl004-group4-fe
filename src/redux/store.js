@@ -1,10 +1,20 @@
 import { combineReducers, createStore } from "redux";
-import cartReducer from "./reducers/cart";
-import userReducer from "./reducers/user";
+import {composeWithDevTools} from 'redux-devtools-extension'
+import {authUserLogin} from "./reducers/userReducer.js";
+import {cartReducer} from "./reducers/cartReducer.js";
 
-export default createStore(
-  combineReducers({
-    cart: cartReducer,
-    user: userReducer,
-  })
-);
+// const store = createStore(
+//   combineReducers({
+//     cart: cartReducer,
+//     user: userReducer,
+
+//   }), composeWithDevTools()
+// );
+const store = createStore(combineReducers({
+  cart: cartReducer,
+  user: authUserLogin
+
+}), composeWithDevTools())
+
+
+export default store

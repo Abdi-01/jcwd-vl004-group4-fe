@@ -10,7 +10,6 @@ import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getCartData } from "../redux/actions/cart";
 
 const Container = styled.div``;
 
@@ -196,54 +195,54 @@ const Product = () => {
     }
   };
 
-  const addToCartHandler = () => {
-    Axios.get(`http://localhost:5000/cart`, {
-      params: {
-        userId: userGlobal.id,
-        productId: productDetail.id,
-      },
-    }).then((result) => {
-      console.log(result.data);
+  // const addToCartHandler = () => {
+  //   Axios.get(`http://localhost:5000/cart`, {
+  //     params: {
+  //       userId: userGlobal.id,
+  //       productId: productDetail.id,
+  //     },
+  //   }).then((result) => {
+  //     console.log(result.data);
 
-      // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
-      let initalQty = result.data.length ? result.data[0].qty : 0;
-      Axios.patch(
-        "http://localhost:5000/cart",
-        {
-          userId: userGlobal.id,
-          qty: initalQty + quantity,
-          productId: parseInt(params.productId),
-        },
-        {
-          params: {
-            userId: userGlobal.id,
-            productId: productDetail.id,
-          },
-        }
-      )
-        .then(() => {
-          swal.fire({
-            title: "Item added sucessfully",
-            icon: "success",
-            confirm: true,
-          });
-          getCartData(userGlobal.id);
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log({
-            userId: userGlobal.id,
-            qty: initalQty + quantity,
-            productId: parseInt(params.productId),
-          });
-          swal.fire({
-            title: "There is some mistake in server",
-            icon: "warning",
-            confirm: true,
-          });
-        });
-    });
-  };
+  //     // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
+  //     let initalQty = result.data.length ? result.data[0].qty : 0;
+  //     Axios.patch(
+  //       "http://localhost:5000/cart",
+  //       {
+  //         userId: userGlobal.id,
+  //         qty: initalQty + quantity,
+  //         productId: parseInt(params.productId),
+  //       },
+  //       {
+  //         params: {
+  //           userId: userGlobal.id,
+  //           productId: productDetail.id,
+  //         },
+  //       }
+  //     )
+  //       .then(() => {
+  //         swal.fire({
+  //           title: "Item added sucessfully",
+  //           icon: "success",
+  //           confirm: true,
+  //         });
+  //         getCartData(userGlobal.id);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         console.log({
+  //           userId: userGlobal.id,
+  //           qty: initalQty + quantity,
+  //           productId: parseInt(params.productId),
+  //         });
+  //         swal.fire({
+  //           title: "There is some mistake in server",
+  //           icon: "warning",
+  //           confirm: true,
+  //         });
+  //       });
+  //   });
+  // };
 
   // logs in user with ID 1 for testing add to cart functionality.
   const dummyLoginHandler = () => {
@@ -281,7 +280,7 @@ const Product = () => {
                   <Amount>{quantity}</Amount>
                   <Add onClick={() => qtyHandler("increment")} />
                 </AmountContainer>
-                <Button onClick={() => addToCartHandler()}>ADD TO CART</Button>
+                <Button>ADD TO CART</Button>
               </AddContainer>
             </InfoContainer>
           </>

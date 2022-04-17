@@ -5,8 +5,9 @@ import {
   ShoppingCartOutlined,
 } from "@material-ui/icons";
 import styled from "styled-components";
-
+import { useEffect, useState } from 'react'
 import { API_URL } from '../constants/API'
+import { useDispatch } from "react-redux";
 
 
 const Info = styled.div`
@@ -71,16 +72,21 @@ const Icon = styled.div`
 `;
 
 const Product = ({ product }) => {
-  console.log(product.image)
+
+  const dispatch = useDispatch()
+
   return (
-    <Container as={Link} to="/product-detail/:productId">
+    <Container >
       <Circle />
 
-      <Image src={`${API_URL}/${product.image}`} />
+      {/* DATA ASLI */}
+      {/* <Image src={`${API_URL}/${product.image}`} /> */}
+      {/* DATA DUMMY */}
+      <Image src={product.image} />
 
       <Info>
         <Icon>
-          <ShoppingCartOutlined />
+          <ShoppingCartOutlined onClick={() => dispatch({ type: "ADD_TO_CART", payload: { id: product.id } })} />
         </Icon>
         <Icon>
           <SearchOutlined />
