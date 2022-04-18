@@ -11,6 +11,7 @@ const initialState = {
             id: 1,
             title: "paracetamole",
             description: 'obat obatan tidak terlarang nih gaes',
+            category: "capsule",
             price: 15000,
             image: "https://images.k24klik.com/product/large/apotek_online_k24klik_20210624013902359225_paracetamol-triman.jpg"
         },
@@ -18,6 +19,7 @@ const initialState = {
             id: 2,
             title: 'Lisinopril',
             description: 'obat obatan tidak terlarang nih gaes',
+            category: "capsule",
             price: 15000,
             image: "https://d2qjkwm11akmwu.cloudfront.net/products/210210_15-7-2019_9-47-34.jpg"
         },
@@ -25,6 +27,7 @@ const initialState = {
             id: 3,
             title: 'Omeprazole',
             description: 'obat obatan tidak terlarang nih gaes',
+            category: "capsule",
             price: 25000,
             image: "https://d2qjkwm11akmwu.cloudfront.net/products/825426_4-11-2020_10-29-21.jpeg"
         }],

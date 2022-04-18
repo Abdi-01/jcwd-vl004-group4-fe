@@ -254,6 +254,7 @@ const Product = () => {
     });
   };
 
+
   return (
     <Container>
       <Wrapper>
@@ -280,7 +281,7 @@ const Product = () => {
                   <Amount>{quantity}</Amount>
                   <Add onClick={() => qtyHandler("increment")} />
                 </AmountContainer>
-                <Button>ADD TO CART</Button>
+                <Button onClick={() => alert("One item has been added to your cart!")} >ADD TO CART</Button>
               </AddContainer>
             </InfoContainer>
           </>

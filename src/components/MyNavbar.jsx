@@ -4,7 +4,9 @@ import { Badge } from "@material-ui/core";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 
 import { useSelector } from "react-redux";
+import { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react'
 import { connect } from "react-redux";
 import { authUserLogout } from "../redux/actions/userAction";
 import { authAdminLogout } from "../redux/actions/adminAction";
@@ -12,8 +14,20 @@ import { authAdminLogout } from "../redux/actions/adminAction";
 const MyNavbar = (props) => {
   const user = useSelector((state) => state.authUserLogin);
   const admin = useSelector((state) => state.authAdminLogin);
+  const cart = useSelector(state => state.cartReducer.cart)
 
   const navigate = useNavigate();
+
+  const [cartCount, setCartCount] = useState(0)
+
+  useEffect(() => {
+    let count = 0;
+    cart.forEach(item => {
+      count += item.qty
+    })
+
+    setCartCount(count)
+  }, [cart, cartCount])
 
   const onUserLogout = () => {
     props.authUserLogout();
@@ -65,7 +79,7 @@ const MyNavbar = (props) => {
             </Nav.Link>
             <Nav.Link onClick={onUserLogout}>Logout</Nav.Link>
             <Nav.Link as={Link} to="/cart">
-              <Badge badgeContent={4} color="primary">
+              <Badge badgeContent={cartCount} color="primary">
                 <ShoppingCartOutlined />
               </Badge>
             </Nav.Link>

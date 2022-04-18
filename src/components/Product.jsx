@@ -75,6 +75,11 @@ const Product = ({ product }) => {
 
   const dispatch = useDispatch()
 
+  const addToCartHandler = () => {
+    dispatch({ type: "ADD_TO_CART", payload: { id: product.id } })
+    // alert('One item has been added to your cart!')
+  }
+
   return (
     <Container >
       <Circle />
@@ -86,7 +91,7 @@ const Product = ({ product }) => {
 
       <Info>
         <Icon>
-          <ShoppingCartOutlined onClick={() => dispatch({ type: "ADD_TO_CART", payload: { id: product.id } })} />
+          <ShoppingCartOutlined onClick={addToCartHandler} />
         </Icon>
         <Icon>
           <SearchOutlined />

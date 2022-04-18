@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Product from "../components/Product";
 import Slider from "../components/Slider";
 import styled from "styled-components";
+import Footer2 from '../components/Footer2'
 import axios from 'axios'
 import { API_URL } from '../constants/API'
 import { useSelector } from "react-redux";
@@ -43,7 +44,7 @@ const Home = () => {
           <Product product={product} key={product.id} />
         ))}
       </ContainerProduct>
-      <Footer />
+      <Footer2 />
     </div>
   );
 };

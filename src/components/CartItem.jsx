@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { mobile } from '../responsive'
 import { useDispatch } from 'react-redux'
 import { useState } from 'react'
+import { Button } from 'react-bootstrap'
 
 const Info = styled.div`
     flex: 3;
@@ -64,8 +65,8 @@ const ProductAmount = styled.div`
 `;
 
 const ProductPrice = styled.div`
-    font-size: 30px;
-    font-weight: 200;
+    font-size: 25px;
+    font-weight: 500;
     ${mobile({ marginBottom: "20px" })}
 `;
 
@@ -109,7 +110,9 @@ const CartItem = ({ item }) => {
                             <ProductId>
                                 <b>ID:</b> {item.id}
                             </ProductId>
-                            <ProductColor color="black" />
+                            <ProductSize>
+                                <b>Category:</b> {item.category}
+                            </ProductSize>
                             <ProductSize>
                                 <b>Description:</b> {item.description}
                             </ProductSize>
@@ -118,11 +121,14 @@ const CartItem = ({ item }) => {
                     <PriceDetail>
                         <ProductAmountContainer>
                             {/* <Add /> */}
-                            <TopText style={{ textDecoration: 'none' }} >Quantity :</TopText>
+                            <TopText style={{ textDecoration: 'none', paddingTop: "20px" }} >Quantity :</TopText>
                             <input style={{ borderRadius: "8px", border: "3px solid black" }} min="1" type="number" id="qty" name="qty" value={input} onChange={qtyHandler} />
                             {/* <Remove /> */}
                         </ProductAmountContainer>
-                        <ProductPrice>Price : Rp {item.price}</ProductPrice>
+                        <ProductPrice style={{ paddingLeft: "70px" }} >Price : Rp {item.price}</ProductPrice>
+                        <Button style={{ marginTop: "55px", marginLeft: "68px" }} className="btn btn-danger" onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: { id: item.id } })} >
+                            Remove Item
+                        </Button>
                     </PriceDetail>
                 </Product>
                 <Hr />
