@@ -2,14 +2,15 @@ import {
     REMOVE_FROM_CART,
     ADD_TO_CART,
     ADJUST_QTY,
-    LOAD_CURRENT_ITEM
+    LOAD_CURRENT_ITEM,
 } from './cartTypes.js'
 
-export const addToCart = (itemId) => {
+export const addToCart = (itemId, userId) => {
     return {
         type: ADD_TO_CART,
         payload: {
-            id: itemId
+            id: itemId,
+            userId: userId
         }
     }
 }

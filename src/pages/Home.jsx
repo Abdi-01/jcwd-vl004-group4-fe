@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import Product from "../components/Product";
 import Slider from "../components/Slider";
 import styled from "styled-components";
-import Footer2 from '../components/Footer2'
 import axios from 'axios'
 import { API_URL } from '../constants/API'
 import { useSelector } from "react-redux";
@@ -18,22 +17,24 @@ const ContainerProduct = styled.div`
 `;
 
 const Home = () => {
+
+
   // DATA ASLI
-  // const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([])
 
-  // useEffect(() => {
-  //   const getProductsData = async () => {
-  //     const { data } = await axios.get(`${API_URL}/products/get-all-products`)
+  useEffect(() => {
+    const getProductsData = async () => {
+      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
 
-  //     console.log(data)
-  //     setProducts(data)
-  //   }
-  //   getProductsData()
-  // }, [])
+      console.log(data)
+      setProducts(data)
+    }
+    getProductsData()
+  }, [])
 
   // DUMMY DATA
-  const products = useSelector(state => state.cartReducer.products)
-  console.log(products)
+  // const products = useSelector(state => state.cartReducer.products)
+  // console.log(products)
 
   return (
     <div>
@@ -44,7 +45,7 @@ const Home = () => {
           <Product product={product} key={product.id} />
         ))}
       </ContainerProduct>
-      <Footer2 />
+      <Footer />
     </div>
   );
 };

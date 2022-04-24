@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { useEffect, useState } from 'react'
 import { API_URL } from '../constants/API'
 import { useDispatch } from "react-redux";
+import { useSelector } from 'react-redux'
 
 
 const Info = styled.div`
@@ -73,11 +74,13 @@ const Icon = styled.div`
 
 const Product = ({ product }) => {
 
+  const userId = useSelector(state => state.authUserLogin.id)
+  console.log(userId);
+
   const dispatch = useDispatch()
 
   const addToCartHandler = () => {
-    dispatch({ type: "ADD_TO_CART", payload: { id: product.id } })
-    // alert('One item has been added to your cart!')
+    dispatch({ type: "ADD_TO_CART", payload: { id: product.id, userId: userId } })
   }
 
   return (
@@ -85,9 +88,9 @@ const Product = ({ product }) => {
       <Circle />
 
       {/* DATA ASLI */}
-      {/* <Image src={`${API_URL}/${product.image}`} /> */}
+      <Image src={`${API_URL}/${product.image}`} />
       {/* DATA DUMMY */}
-      <Image src={product.image} />
+      {/* <Image src={product.image} /> */}
 
       <Info>
         <Icon>

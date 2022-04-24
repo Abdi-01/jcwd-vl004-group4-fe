@@ -4,6 +4,7 @@ import { mobile } from '../responsive'
 import { useDispatch } from 'react-redux'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
+import { API_URL } from '../constants/API'
 
 const Info = styled.div`
     flex: 3;
@@ -86,6 +87,11 @@ const CartItem = ({ item }) => {
 
     const [input, setInput] = useState(item.qty)
     const dispatch = useDispatch()
+    console.log(item)
+
+    // price thousand separator
+    const price = item.sell_price.toLocaleString()
+
 
     const qtyHandler = (e) => {
         setInput(e.target.value)
@@ -102,19 +108,14 @@ const CartItem = ({ item }) => {
             <Info>
                 <Product>
                     <ProductDetail>
-                        <Image src={item.image} />
+                        <Image src={`${API_URL}/${item.image}`} />
                         <Details>
                             <ProductName>
-                                <b>Product:</b> {item.title}
+                                <b>Product:</b> {item.name}
                             </ProductName>
-                            <ProductId>
-                                <b>ID:</b> {item.id}
-                            </ProductId>
+                            <br />
                             <ProductSize>
-                                <b>Category:</b> {item.category}
-                            </ProductSize>
-                            <ProductSize>
-                                <b>Description:</b> {item.description}
+                                <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
                             </ProductSize>
                         </Details>
                     </ProductDetail>
@@ -125,7 +126,7 @@ const CartItem = ({ item }) => {
                             <input style={{ borderRadius: "8px", border: "3px solid black" }} min="1" type="number" id="qty" name="qty" value={input} onChange={qtyHandler} />
                             {/* <Remove /> */}
                         </ProductAmountContainer>
-                        <ProductPrice style={{ paddingLeft: "70px" }} >Price : Rp {item.price}</ProductPrice>
+                        <ProductPrice style={{ paddingLeft: "70px", color: "#3CB371" }} >Price : Rp {price}</ProductPrice>
                         <Button style={{ marginTop: "55px", marginLeft: "68px" }} className="btn btn-danger" onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: { id: item.id } })} >
                             Remove Item
                         </Button>

@@ -8,7 +8,7 @@ import { API_URL } from '../constants/API'
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const Container = styled.div``;
@@ -148,7 +148,8 @@ const Product = () => {
 
   const params = useParams();
 
-  let userGlobal = JSON.parse(localStorage.getItem("userGlobal"));
+  //let userGlobal = JSON.parse(localStorage.getItem("token_shutter"));
+  
 
   const dispatch = useDispatch();
 

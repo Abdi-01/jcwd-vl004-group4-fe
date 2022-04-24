@@ -1,19 +1,38 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Cart.module.css";
-import { useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
-import Footer2 from "../components/Footer2";
+import axios from "axios";
+import { API_URL } from "../constants/API";
+import Footer from "../components/Footer";
 
 import CartItem from "../components/CartItem.jsx";
 
 const Cart = () => {
 
-  const cart = useSelector(state => state.cartReducer.cart)
+  // const cart = useSelector(state => state.cartReducer.cart)
+  // console.log(cart)
+
+  const [cart, setCart] = useState([])
+
+  useEffect(() => {
+    const getProductsData = async () => {
+      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
+
+      console.log(data)
+      // data[0].qty = 2;
+      setCart(data)
+    }
+    getProductsData()
+  }, [])
 
   const shippingDummy = 12000
 
   const [totalPrice, setTotalPrice] = useState(0)
-  const [totalItems, setTotalItems] = useState(0)
+  let [totalItems, setTotalItems] = useState(0)
+
+  // thousand separator totalPrice
+  const finalPrice = (totalPrice + shippingDummy).toLocaleString()
+
 
   useEffect(() => {
     let price = 0;
@@ -21,8 +40,9 @@ const Cart = () => {
 
     cart.forEach(item => {
       items += item.qty
-      price += item.qty * item.price
+      price += item.qty * item.sell_price
     })
+    console.log(`totalitems: ${totalItems}`)
 
     setTotalItems(items)
     setTotalPrice(price)
@@ -40,7 +60,7 @@ const Cart = () => {
           <h4 className={styles.summary__title}>Order Summary</h4>
           <div className={styles.summary__price}>
             <span><b>SUBTOTAL : </b>  ( {totalItems} items )</span>
-            <span>Rp.{totalPrice}</span>
+            <span>Rp.{totalPrice.toLocaleString()}</span>
           </div>
           <select name="shipping" className="select" >
             <option value="" disabled selected >Shipping Options</option>
@@ -50,18 +70,19 @@ const Cart = () => {
           </select>
           <div className={styles.summary__price}>
             <span><b>Estimated Shipping : </b></span>
-            <span>Rp.12000</span>
+            <span>Rp.{shippingDummy.toLocaleString()}</span>
           </div>
+          <hr style={{ borderTop: "3px solid black" }} />
           <div className={styles.summary__price}>
             <span><b>TOTAL : </b></span>
-            <span>Rp.{totalPrice + shippingDummy}</span>
+            <span>Rp.{finalPrice}</span>
           </div>
           <Button className="btn btn-info" style={{ fontWeight: "bold" }} >
             Proceed To Checkout
           </Button>
         </div>
       </div>
-      <Footer2 />
+      <Footer />
     </>
   );
 };
