@@ -4,9 +4,8 @@ import Footer from "../components/Footer";
 import Product from "../components/Product";
 import Slider from "../components/Slider";
 import styled from "styled-components";
-import axios from 'axios'
+import Axios from "axios";
 import { API_URL } from '../constants/API'
-
 
 const ContainerProduct = styled.div`
     padding: 20px;
@@ -21,10 +20,9 @@ const Home = () => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
-
-      console.log(data)
-      setProducts(data)
+      const {data} = await Axios.get(`${API_URL}/products/get-all-products`)
+      console.log(data.rows)
+      setProducts(data.rows)
     }
     getProductsData()
   }, [])
@@ -32,7 +30,9 @@ const Home = () => {
   return (
     <div>
       <Slider />
+      <h2>CATEGORIES:</h2>
       <Categories />
+      <h2>PRODUCTS:</h2>
       <ContainerProduct>
         {products.map(product => (
           <Product product={product} key={product.id} />

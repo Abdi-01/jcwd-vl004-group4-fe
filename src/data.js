@@ -1,41 +1,44 @@
 export const sliderItems = [
   {
     id: 1,
-    img: "https://i.ibb.co/XsdmR2c/1.png",
-    title: "SUMMER SALE",
-    desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-    bg: "f5fafd",
+    img: "https://sobeyspharmacy.com/wp-content/uploads/2016/02/PharmacyTeam_4people-sm-1-1024x661.png",
+    title: "Pharmacy-App-4",
+    desc: "Globally Present to Make People Live a Healthier and Meaningful Life",
+    bg: "7dc4f4",
   },
   {
     id: 2,
-    img: "https://i.ibb.co/DG69bQ4/2.png",
-    title: "AUTUMN COLLECTION",
-    desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-    bg: "fcf1ed",
+    img: "http://www.shantigopalhospitals.com/wp-content/uploads/2015/08/4-pathology.png",
+    title: "Innovation is the Key to Our Success",
+    desc: "We provide Innovative and Trustworthy products and services as a solution for daily health management.",
+    bg: "033f68",
   },
   {
     id: 3,
-    img: "https://i.ibb.co/cXFnLLV/3.png",
-    title: "LOUNGEWEAR LOVE",
-    desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-    bg: "fbf0f4",
+    img: "https://assets.webiconspng.com/uploads/2017/09/Pills-PNG-Image-39461.png",
+    title: "Get the Most Suitable Medicine",
+    desc: "We ensure that all products are developed responsibly to make the lives of many people healthier globally.",
+    bg: "ffc619",
   },
 ];
 
 export const categories = [
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1573883429746-084be9b5cfca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGlsbHN8ZW58MHx8MHx8&w=1000&q=80",
-    title: "TABLETS",
+    // img: "https://images.unsplash.com/photo-1573883429746-084be9b5cfca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGlsbHN8ZW58MHx8MHx8&w=1000&q=80",
+    img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-1-5/512/8-256.png",
+    title: "TABLET",
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1630094539416-5e17c6191be5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    // img: "https://images.unsplash.com/photo-1630094539416-5e17c6191be5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-2-5/512/87-256.png",
     title: "CAPSULE",
   },
   {
     id: 3,
-    img: "https://images.unsplash.com/photo-1612475498348-fb774b4ebf33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1607&q=80",
+    // img: "https://images.unsplash.com/photo-1612475498348-fb774b4ebf33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1607&q=80",
+    img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-1-5/512/15-512.png",
     title: "LIQUID",
   },
 ];
