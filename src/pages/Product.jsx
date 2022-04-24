@@ -3,7 +3,7 @@ import { Add, Category, Details, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
-import { API_URL } from '../constants/API'
+import { API_URL } from "../constants/API";
 
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
@@ -52,10 +52,10 @@ const Price = styled.span`
 `;
 
 const Text = styled.p`
-padding-top: 10px;
-font-weight: 300;
-font-size: 20px;
-`
+  padding-top: 10px;
+  font-weight: 300;
+  font-size: 20px;
+`;
 
 /*
 const FilterContainer = styled.div`
@@ -143,6 +143,7 @@ const Product = () => {
     category: {},
     image: "",
   });
+  console.log(productDetail);
 
   const [productNotFound, setProductNotFound] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -261,9 +262,8 @@ const Product = () => {
         {productNotFound ? null : (
           <>
             <ImgContainer>
-              {/* bcs there is no image property in table for now */}
-              {/* <Image src={productDetail.image} /> */}
-              <Image src="https://readyornotalberta.ca/app/uploads/2018/06/prescription-drug-pile-edit.png" />
+              {/* bcs productDetail.image is in backend} */}
+              <Image src={"http://localhost:5000/" + productDetail.image} />
             </ImgContainer>
             <InfoContainer>
               <Title>{productDetail.name}</Title>
@@ -275,6 +275,7 @@ const Product = () => {
               <Text>Stock: {productDetail.stock} pcs</Text>
               <Text>Unit: {productDetail.unit}</Text>
               <Text>Volume: {productDetail.volume}</Text>
+              <Text>Bottle Capacity: {productDetail.bottle_capacity}</Text>
               <AddContainer>
                 <AmountContainer>
                   <Remove onClick={() => qtyHandler("decrement")} />

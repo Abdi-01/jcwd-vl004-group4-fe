@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 // import { popularProducts } from "../data";
 import Product from "./Product";
@@ -10,6 +11,7 @@ const Container = styled.div`
 `;
 
 const Products = ({ products }) => {
+
   return (
     <Container>
       {products.map(product => (

@@ -9,6 +9,7 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { Link} from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -65,6 +66,13 @@ const List = styled.ul`
 const ListItem = styled.li`
   width: 50%;
   margin-bottom: 10px;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+    color: black;
+  }
 `;
 
 const Right = styled.div`
@@ -88,11 +96,9 @@ const Footer = () => {
   return (
     <Container>
       <Left>
-        <Logo>LAMA.</Logo>
+        <Logo>Pharmacy-App-4</Logo>
         <Desc>
-          There are many variations of passages of Lorem Ipsum available, but
-          the majority have suffered alteration in some form, by injected
-          humour, or randomised words which don’t look even slightly believable.
+        Pharmacy-App-4 is a pharmaceutical company that has been the trusted choice for over 24 years. Pharmacy-App-4 gives the best health products option and offers quality.
         </Desc>
         <SocialContainer>
           <SocialIcon color="3B5999">
@@ -112,16 +118,12 @@ const Footer = () => {
       <Center>
         <Title>Useful Links</Title>
         <List>
-          <ListItem>Home</ListItem>
-          <ListItem>Cart</ListItem>
-          <ListItem>Man Fashion</ListItem>
-          <ListItem>Woman Fashion</ListItem>
-          <ListItem>Accessories</ListItem>
+          <ListItem as={Link} to="/">Home</ListItem>
           <ListItem>My Account</ListItem>
-          <ListItem>Order Tracking</ListItem>
+          <ListItem as={Link} to="/product-list">Products</ListItem>
           <ListItem>Wishlist</ListItem>
-          <ListItem>Wishlist</ListItem>
-          <ListItem>Terms</ListItem>
+          <ListItem>About Us</ListItem>
+          <ListItem as={Link} to="/cart">Cart</ListItem>
         </List>
       </Center>
       <Right>
@@ -133,7 +135,7 @@ const Footer = () => {
           <Phone style={{marginRight:"10px"}}/> +1 234 56 78
         </ContactItem>
         <ContactItem>
-          <MailOutline style={{marginRight:"10px"}} /> contact@lama.dev
+          <MailOutline style={{marginRight:"10px"}} /> contact@pharmacy-app-4.com
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>

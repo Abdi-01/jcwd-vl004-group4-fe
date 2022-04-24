@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
+  padding-top: 60px;
   display: flex;
   position: relative;
   overflow: hidden;
@@ -54,6 +55,7 @@ const ImgContainer = styled.div`
 `;
 
 const Image = styled.img`
+  margin-left: 30px;
   height: 80%;
 `;
 
@@ -63,17 +65,21 @@ const InfoContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 70px;
+  color: white;
+  font-size: 50px;
+  font-weight: 500;
 `;
 
 const Desc = styled.p`
+  color: white;
   margin: 50px 0px;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 500;
   letter-spacing: 3px;
 `;
 
 const Button = styled.button`
+  color: white;
   padding: 10px;
   font-size: 20px;
   background-color: transparent;
@@ -105,9 +111,9 @@ const Slider = () => {
             <InfoContainer>
               <Title>{item.title}</Title>
               <Desc>{item.desc}</Desc>
-              <Button onClick={() => navigate("/product-list")}>
+              {/* <Button onClick={() => navigate("/product-list")}>
                 SHOW NOW
-              </Button>
+              </Button> */}
             </InfoContainer>
           </Slide>
         ))}
