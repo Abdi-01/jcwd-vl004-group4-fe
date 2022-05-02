@@ -9,14 +9,14 @@ import CartItem from "../components/CartItem.jsx";
 
 const Cart = () => {
 
-  // const cart = useSelector(state => state.cartReducer.cart)
-  // console.log(cart)
+  // const carts = useSelector(state => state.cartReducer.cart)
+  // console.log(carts)
 
   const [cart, setCart] = useState([])
 
   useEffect(() => {
     const getProductsData = async () => {
-      const { data } = await axios.get(`${API_URL}/products/get-all-products`)
+      const { data } = await axios.get(`${API_URL}/products/all-products`)
 
       console.log(data)
       // data[0].qty = 2;

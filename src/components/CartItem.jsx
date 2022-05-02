@@ -113,6 +113,9 @@ const CartItem = ({ item }) => {
                             <ProductName>
                                 <b>Product:</b> {item.name}
                             </ProductName>
+                            <ProductName>
+                                <b>Category:</b> {item.category.name}
+                            </ProductName>
                             <br />
                             <ProductSize>
                                 <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad

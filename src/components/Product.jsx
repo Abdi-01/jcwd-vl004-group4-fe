@@ -10,7 +10,6 @@ import { API_URL } from '../constants/API'
 import { useDispatch } from "react-redux";
 import { useSelector } from 'react-redux'
 
-
 const Info = styled.div`
   opacity: 0;
   width: 100%;
@@ -84,7 +83,7 @@ const Product = ({ product }) => {
   }
 
   return (
-    <Container >
+    <Container as={Link} to={`/product-detail/${product.id}`}>
       <Circle />
 
       {/* DATA ASLI */}
