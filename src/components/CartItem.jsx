@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { API_URL } from '../constants/API'
+import { Link } from 'react-router-dom'
+import swal from 'sweetalert'
+import axios from 'axios'
+import { debounce } from 'throttle-debounce';
+
+
 
 const Info = styled.div`
     flex: 3;
@@ -83,24 +89,61 @@ const TopText = styled.span`
     margin: 0px 10px;
     `;
 
-const CartItem = ({ item }) => {
+const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
 
     const [input, setInput] = useState(item.qty)
     const dispatch = useDispatch()
-    console.log(item)
+    // console.log(item)
+
+    const userId = useSelector(state => state.authUserLogin.id)
 
     // price thousand separator
-    const price = item.sell_price.toLocaleString()
+    const price = item.product.sell_price.toLocaleString()
+    const debounceUpdate = useCallback(
+        debounce(300, async (value) => {
+            console.log(value)
+            const response = await axios.patch(`${API_URL}/cart/update/${item.id}/user/${userId}`, {
+                qty: value
+            })
+            console.log(response.data)
+            setTotalItems(response.data.count)
+            setTotalPrice(response.data.subTotal)
+        }), []
+    )
 
+    useEffect(() => {
+        debounceUpdate(input)
+    }, [input])
 
-    const qtyHandler = (e) => {
-        setInput(e.target.value)
-        dispatch({
-            type: "ADJUST_QTY", payload: {
-                id: item.id,
-                qty: e.target.value
-            }
+    const deleteHandler = id => {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, your item will be gone!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
         })
+            .then((willDelete) => {
+                if (willDelete) {
+                    axios.delete(`${API_URL}/cart/delete-cart/${id}/user/${+userId}`)
+                        .then(response => {
+                            dispatch({
+                                type: 'CART_COUNT',
+                                payload: response.data.count
+                            })
+                            setCart(response.data.remainingCart)
+                            setTotalItems(response.data.count)
+                            setTotalPrice(response.data.subTotal)
+                            swal('One item has been deleted!', {
+                                icon: "success",
+                            });
+                        })
+                        .catch(err => console.log(err))
+
+                } else {
+                    swal("Your cart is safe!");
+                }
+            });
     }
 
     return (
@@ -108,13 +151,15 @@ const CartItem = ({ item }) => {
             <Info>
                 <Product>
                     <ProductDetail>
-                        <Image src={`${API_URL}/${item.image}`} />
+                        <Link to={`/product-detail/${item.product.id}`} >
+                            <Image src={`${API_URL}/${item.product.image}`} />
+                        </Link>
                         <Details>
                             <ProductName>
-                                <b>Product:</b> {item.name}
+                                <b>Product:</b> {item.product.name}
                             </ProductName>
                             <ProductName>
-                                <b>Category:</b> {item.category.name}
+                                <b>Category:</b> {item.product.category.name}
                             </ProductName>
                             <br />
                             <ProductSize>
@@ -125,12 +170,12 @@ const CartItem = ({ item }) => {
                     <PriceDetail>
                         <ProductAmountContainer>
                             {/* <Add /> */}
-                            <TopText style={{ textDecoration: 'none', paddingTop: "20px" }} >Quantity :</TopText>
-                            <input style={{ borderRadius: "8px", border: "3px solid black" }} min="1" type="number" id="qty" name="qty" value={input} onChange={qtyHandler} />
+                            <TopText style={{ textDecoration: 'none', paddingTop: "20px" }} >Quantity . . .</TopText>
+                            <input style={{ borderRadius: "8px", border: "3px solid black" }} min="1" type="number" id="qty" name="qty" value={input} onChange={(e) => setInput(parseInt(e.target.value))} />
                             {/* <Remove /> */}
                         </ProductAmountContainer>
                         <ProductPrice style={{ paddingLeft: "70px", color: "#3CB371" }} >Price : Rp {price}</ProductPrice>
-                        <Button style={{ marginTop: "55px", marginLeft: "68px" }} className="btn btn-danger" onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: { id: item.id } })} >
+                        <Button style={{ marginTop: "55px", marginLeft: "68px" }} className="btn btn-danger" onClick={() => deleteHandler(item.id)} >
                             Remove Item
                         </Button>
                     </PriceDetail>

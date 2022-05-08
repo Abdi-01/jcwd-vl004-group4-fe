@@ -18,6 +18,7 @@ import { API_URL } from "../constants/API";
 import { Link, useNavigate } from "react-router-dom";
 import { authUserLogin } from "../redux/actions/userAction";
 import { connect } from "react-redux";
+import { useDispatch } from 'react-redux'
 
 const Container = styled.div`
   width: 100vw;
@@ -61,6 +62,7 @@ const Login = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
@@ -79,6 +81,10 @@ const Login = (props) => {
         .then((res) => {
           localStorage.setItem("token_shutter", JSON.stringify(res.data.token));
           props.authUserLogin(res.data.dataLogin);
+          dispatch({
+            type: "CART_COUNT",
+            payload: res.data.dataLogin.carts.length
+          })
           setIsLogin(true);
           setResMsg(res.data.message);
         })

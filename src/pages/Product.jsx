@@ -4,11 +4,14 @@ import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { API_URL } from "../constants/API";
+import axios from 'axios'
+import swal2 from 'sweetalert'
 
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom'
 import { useParams } from "react-router-dom";
 
 const Container = styled.div``;
@@ -55,42 +58,6 @@ const Text = styled.p`
   font-weight: 300;
   font-size: 20px;
 `;
-
-/*
-const FilterContainer = styled.div`
-  width: 50%;
-  margin: 30px 0px;
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ width: "100%" })}
-`;
-
-const Filter = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const FilterTitle = styled.span`
-  font-size: 20px;
-  font-weight: 400;
-`;
-
-const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0px 5px;
-  cursor: pointer;
-`;
-
-const FilterSize = styled.select`
-  margin-left: 10px;
-  padding: 5px;
-`;
-
-const FilterSizeOption = styled.option``;
-*/
 
 const AddContainer = styled.div`
   width: 50%;
@@ -144,15 +111,49 @@ const Product = () => {
   });
   console.log(productDetail);
 
+  const navigate = useNavigate()
+  const userGlobal = useSelector(state => state.authUserLogin)
+  const userToken = localStorage.getItem('token_shutter')
+
+
   const [productNotFound, setProductNotFound] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
   const params = useParams();
+  const dispatch = useDispatch()
 
-  //let userGlobal = JSON.parse(localStorage.getItem("token_shutter"));
+  const addToCart = () => {
 
+    // login is required
+    if (!userToken) {
+      swal2("Log in is required!");
+      navigate('/login')
+    } else {
+      const data = {
+        qty: quantity,
+        userId: userGlobal.id,
+        productId: productDetail.id
+      }
+      axios.post(`${API_URL}/cart/add-cart`, data)
+        .then(response => {
+          console.log(response.data)
+          if (response.data.conflict) {
+            return swal2(response.data.warning, response.data.conflict, "error");
+          } else if (response.data.count) {
+            dispatch({
+              type: "CART_COUNT",
+              payload: response.data.count
+            })
+          }
+          swal2("Success!", response.data.message, "success");
+        })
+        .catch(err => {
+          console.log(err.message)
+          swal2("Failed!", "Cannot add item to cart", "error");
+        })
+    }
 
-  const dispatch = useDispatch();
+  }
 
   // to get product detail
   const fetchProductDetail = () => {
@@ -197,65 +198,6 @@ const Product = () => {
     }
   };
 
-  // const addToCartHandler = () => {
-  //   Axios.get(`http://localhost:5000/cart`, {
-  //     params: {
-  //       userId: userGlobal.id,
-  //       productId: productDetail.id,
-  //     },
-  //   }).then((result) => {
-  //     console.log(result.data);
-
-  //     // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
-  //     let initalQty = result.data.length ? result.data[0].qty : 0;
-  //     Axios.patch(
-  //       "http://localhost:5000/cart",
-  //       {
-  //         userId: userGlobal.id,
-  //         qty: initalQty + quantity,
-  //         productId: parseInt(params.productId),
-  //       },
-  //       {
-  //         params: {
-  //           userId: userGlobal.id,
-  //           productId: productDetail.id,
-  //         },
-  //       }
-  //     )
-  //       .then(() => {
-  //         swal.fire({
-  //           title: "Item added sucessfully",
-  //           icon: "success",
-  //           confirm: true,
-  //         });
-  //         getCartData(userGlobal.id);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         console.log({
-  //           userId: userGlobal.id,
-  //           qty: initalQty + quantity,
-  //           productId: parseInt(params.productId),
-  //         });
-  //         swal.fire({
-  //           title: "There is some mistake in server",
-  //           icon: "warning",
-  //           confirm: true,
-  //         });
-  //       });
-  //   });
-  // };
-
-  // logs in user with ID 1 for testing add to cart functionality.
-  const dummyLoginHandler = () => {
-    dispatch({
-      type: "LOGIN_USER",
-      payload: {
-        id: 1,
-      },
-    });
-  };
-
 
   return (
     <Container>
@@ -283,7 +225,7 @@ const Product = () => {
                   <Amount>{quantity}</Amount>
                   <Add onClick={() => qtyHandler("increment")} />
                 </AmountContainer>
-                <Button onClick={() => alert("One item has been added to your cart!")} >ADD TO CART</Button>
+                <Button onClick={addToCart} >ADD TO CART</Button>
               </AddContainer>
             </InfoContainer>
           </>

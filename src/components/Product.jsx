@@ -76,11 +76,6 @@ const Product = ({ product }) => {
   const userId = useSelector(state => state.authUserLogin.id)
   console.log(userId);
 
-  const dispatch = useDispatch()
-
-  const addToCartHandler = () => {
-    dispatch({ type: "ADD_TO_CART", payload: { id: product.id, userId: userId } })
-  }
 
   return (
     <Container as={Link} to={`/product-detail/${product.id}`}>
@@ -93,7 +88,7 @@ const Product = ({ product }) => {
 
       <Info>
         <Icon>
-          <ShoppingCartOutlined onClick={addToCartHandler} />
+          <ShoppingCartOutlined />
         </Icon>
         <Icon>
           <SearchOutlined />
