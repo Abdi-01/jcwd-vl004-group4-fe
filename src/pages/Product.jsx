@@ -146,10 +146,11 @@ const Product = () => {
             })
           }
           swal2("Success!", response.data.message, "success");
+
         })
         .catch(err => {
           console.log(err.message)
-          swal2("Failed!", "Cannot add item to cart", "error");
+          swal2("Failed!", "Input quantity exceeds item stock!", "error");
         })
     }
 

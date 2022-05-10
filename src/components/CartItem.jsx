@@ -91,11 +91,12 @@ const TopText = styled.span`
 
 const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
 
-    const [input, setInput] = useState(item.qty)
+    let [input, setInput] = useState(item.qty)
     const dispatch = useDispatch()
     // console.log(item)
 
     const userId = useSelector(state => state.authUserLogin.id)
+    const stockReady = item.product.stock
 
     // price thousand separator
     const price = item.product.sell_price.toLocaleString()
@@ -112,7 +113,12 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
     )
 
     useEffect(() => {
-        debounceUpdate(input)
+        let maxQty = input
+        if (maxQty > stockReady) {
+            maxQty = stockReady
+        } else {
+            debounceUpdate(input)
+        }
     }, [input])
 
     const deleteHandler = id => {
@@ -171,7 +177,7 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
                         <ProductAmountContainer>
                             {/* <Add /> */}
                             <TopText style={{ textDecoration: 'none', paddingTop: "20px" }} >Quantity . . .</TopText>
-                            <input style={{ borderRadius: "8px", border: "3px solid black" }} min="1" type="number" id="qty" name="qty" value={input} onChange={(e) => setInput(parseInt(e.target.value))} />
+                            <input style={{ borderRadius: "8px", border: "3px solid black", width: "200px" }} min="1" max={stockReady} type="number" id="qty" name="qty" value={input} onChange={(e) => setInput(+e.target.value)} />
                             {/* <Remove /> */}
                         </ProductAmountContainer>
                         <ProductPrice style={{ paddingLeft: "70px", color: "#3CB371" }} >Price : Rp {price}</ProductPrice>
