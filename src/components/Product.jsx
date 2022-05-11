@@ -5,7 +5,10 @@ import {
   ShoppingCartOutlined,
 } from "@material-ui/icons";
 import styled from "styled-components";
+import { useEffect, useState } from 'react'
 import { API_URL } from '../constants/API'
+import { useDispatch } from "react-redux";
+import { useSelector } from 'react-redux'
 
 const Info = styled.div`
   opacity: 0;
@@ -69,20 +72,26 @@ const Icon = styled.div`
 `;
 
 const Product = ({ product }) => {
-  console.log(product)
-  console.log(product.image)
+
+  const userId = useSelector(state => state.authUserLogin.id)
+  console.log(userId);
+
+
   return (
     <Container as={Link} to={`/product-detail/${product.id}`}>
       <Circle />
 
+      {/* DATA ASLI */}
       <Image src={`${API_URL}/${product.image}`} />
+      {/* DATA DUMMY */}
+      {/* <Image src={product.image} /> */}
 
       <Info>
         <Icon>
           <ShoppingCartOutlined />
         </Icon>
         <Icon>
-          <SearchOutlined/>
+          <SearchOutlined />
         </Icon>
         <Icon>
           <FavoriteBorderOutlined />

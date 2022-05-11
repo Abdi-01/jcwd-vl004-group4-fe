@@ -26,10 +26,13 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
+import { useDispatch } from 'react-redux'
 
 const App = (props) => {
   const [user, setUser] = useState();
   const [admin, setAdmin] = useState();
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
@@ -49,6 +52,10 @@ const App = (props) => {
               JSON.stringify(res.data.token)
             );
             props.authUserLogin(res.data.dataLogin);
+            dispatch({
+              type: 'CART_COUNT',
+              payload: res.data.dataLogin.carts.length
+            })
           })
           .catch((err) => {
             console.log(err);

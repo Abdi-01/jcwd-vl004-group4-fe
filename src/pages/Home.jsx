@@ -6,6 +6,7 @@ import Slider from "../components/Slider";
 import styled from "styled-components";
 import Axios from "axios";
 import { API_URL } from '../constants/API'
+import { useSelector } from "react-redux";
 
 const ContainerProduct = styled.div`
     padding: 20px;
@@ -16,16 +17,23 @@ const ContainerProduct = styled.div`
 
 const Home = () => {
 
+
+  // DATA ASLI
   const [products, setProducts] = useState([])
+
 
   useEffect(() => {
     const getProductsData = async () => {
-      const {data} = await Axios.get(`${API_URL}/products/get-all-products`)
+      const { data } = await Axios.get(`${API_URL}/products/get-all-products`)
       console.log(data.rows)
       setProducts(data.rows)
     }
     getProductsData()
   }, [])
+
+  // DUMMY DATA
+  // const products = useSelector(state => state.cartReducer.products)
+  // console.log(products)
 
   return (
     <div>
