@@ -40,15 +40,6 @@ const Details = styled.div`
 
 const ProductName = styled.span``;
 
-const ProductId = styled.span``;
-
-const ProductColor = styled.div`
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: ${(props) => props.color};
-`;
-
 const ProductSize = styled.span``;
 
 const PriceDetail = styled.div`
@@ -63,12 +54,6 @@ const ProductAmountContainer = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-`;
-
-const ProductAmount = styled.div`
-    font-size: 24px;
-    margin: 5px;
-    ${mobile({ margin: "5px 15px" })}
 `;
 
 const ProductPrice = styled.div`
