@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../constants/API";
@@ -55,21 +56,32 @@ const Footer = styled.div`
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
+      name: "",
       username: "",
       email: "",
+      phone: "",
       password: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string()
+        .min(2, "Name too short")
+        .max(50, "Name too long")
+        .required("Name required"),
       username: Yup.string()
         .max(15, "Must be 15 character or less")
         .required("Username required"),
       email: Yup.string()
         .email("Invalid Email Address")
         .required("Email required"),
+      phone: Yup.string().matches(
+        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+        "Invalid phone number"
+      ),
       password: Yup.string()
         .matches(
           /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/,
@@ -79,6 +91,7 @@ const Register = () => {
     }),
     onSubmit: (values) => {
       // console.log(values);
+      setLoading(true);
       Axios.post(`${API_URL}/users/register`, values)
         .then((res) => {
           Swal.fire({
@@ -88,8 +101,9 @@ const Register = () => {
           navigate("/");
         })
         .catch((err) => {
+          setLoading(false);
           Swal.fire({
-            text: err.response.data,
+            text: err.message,
             icon: "error",
           });
           // console.log(err.response.data);
@@ -104,6 +118,18 @@ const Register = () => {
     <Container>
       <Wrapper>
         <Title>Register</Title>
+        <TextField
+          fullWidth
+          id="outlined-basic"
+          label="Name"
+          className="mb-3"
+          name="name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
+        />
         <TextField
           fullWidth
           id="outlined-basic"
@@ -131,6 +157,18 @@ const Register = () => {
         <TextField
           fullWidth
           id="outlined-basic"
+          label="Phone Number"
+          className="mb-3"
+          name="phone"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.phone}
+          error={formik.touched.phone && Boolean(formik.errors.phone)}
+          helperText={formik.touched.phone && formik.errors.phone}
+        />
+        <TextField
+          fullWidth
+          id="outlined-basic"
           label="Password"
           className="mb-3"
           name="password"
@@ -154,16 +192,20 @@ const Register = () => {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
-        <Button
-          variant="contained"
-          className="mb-4"
-          onClick={formik.handleSubmit}
-        >
-          Register
-        </Button>
+        {loading ? (
+          <CircularProgress className="my-3" />
+        ) : (
+          <Button
+            variant="contained"
+            className="mb-4"
+            onClick={formik.handleSubmit}
+          >
+            Register
+          </Button>
+        )}
         <Footer>
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#026670" }}>
+          <Link to="/login" style={{ textDecoration: "none" }}>
             Sign In
           </Link>
         </Footer>
