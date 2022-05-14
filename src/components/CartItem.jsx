@@ -120,7 +120,7 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
                         .then(response => {
                             dispatch({
                                 type: 'CART_COUNT',
-                                payload: response.data.count
+                                payload: response.data.length
                             })
                             setCart(response.data.remainingCart)
                             setTotalItems(response.data.count)
@@ -151,6 +151,9 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
                             </ProductName>
                             <ProductName>
                                 <b>Category:</b> {item.product.category.name}
+                            </ProductName>
+                            <ProductName>
+                                <b>Stock:</b> {item.product.stock}
                             </ProductName>
                             <br />
                             <ProductSize>
