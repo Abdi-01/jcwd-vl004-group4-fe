@@ -14,8 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { API_URL } from "../../constants/API";
 import Axios from "axios";
-import { authAdminLogin } from "../../redux/actions/adminAction";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -59,6 +58,7 @@ const AdminLogin = (props) => {
   const [isLogin, setIsLogin] = useState(false);
   const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -79,8 +79,11 @@ const AdminLogin = (props) => {
             "token_shutter_admin",
             JSON.stringify(res.data.token)
           );
-          props.authAdminLogin(res.data.dataLogin);
-          console.log(res.data.dataLogin);
+          dispatch({
+            type: "ADMIN_LOGIN_SUCCESS",
+            payload: res.data.dataLogin,
+          });
+          // console.log(res.data.dataLogin);
           setIsLogin(true);
           setResMsg(res.data.message);
         })
@@ -109,7 +112,7 @@ const AdminLogin = (props) => {
         willClose: () => {
           clearInterval(timerInterval);
         },
-      }).then((result) => {
+      }).then(() => {
         navigate("/admin");
       });
     }
@@ -175,4 +178,4 @@ const AdminLogin = (props) => {
   );
 };
 
-export default connect(null, { authAdminLogin })(AdminLogin);
+export default AdminLogin;

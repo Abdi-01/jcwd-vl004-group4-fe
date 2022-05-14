@@ -69,7 +69,7 @@ const MyNavbar = (props) => {
       ) : user.username ? (
         <div className="nav-right me-5">
           <Nav>
-            <Nav.Link as={Link} to="/profile">
+            <Nav.Link as={Link} to={`/profile/${user.id}`}>
               {user.username}
             </Nav.Link>
             <Nav.Link onClick={onUserLogout}>Logout</Nav.Link>

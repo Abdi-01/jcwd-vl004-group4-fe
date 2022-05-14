@@ -1,10 +1,10 @@
 const INIT_STATE = {
   id: null,
-  name: null,
+  name: "",
   email: "",
   username: "",
   password: "",
-  phone: null,
+  phone: "",
   status: "",
   is_active: true,
   createdAt: "",
