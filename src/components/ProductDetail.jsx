@@ -68,11 +68,11 @@ const Icon = styled.div`
   }
 `;
 
-const Product = ({ product }) => {
+const ProductDetail = ({ product }) => {
   console.log(product)
   console.log(product.image)
   return (
-    <Container as={Link} to={`/product-detail/${product.id}`}>
+    <Container as={Link} to={`/product-detail/${product.id}`}> 
       <Circle />
 
       <Image src={`${API_URL}/${product.image}`} />
@@ -92,4 +92,4 @@ const Product = ({ product }) => {
   );
 };
 
-export default Product;
+export default ProductDetail;

@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Add, Category, Details, Remove } from "@material-ui/icons";
+import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
@@ -8,8 +8,8 @@ import { API_URL } from "../constants/API";
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCartData } from "../redux/actions/cart";
 
 const Container = styled.div``;
@@ -57,42 +57,6 @@ const Text = styled.p`
   font-size: 20px;
 `;
 
-/*
-const FilterContainer = styled.div`
-  width: 50%;
-  margin: 30px 0px;
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ width: "100%" })}
-`;
-
-const Filter = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const FilterTitle = styled.span`
-  font-size: 20px;
-  font-weight: 400;
-`;
-
-const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0px 5px;
-  cursor: pointer;
-`;
-
-const FilterSize = styled.select`
-  margin-left: 10px;
-  padding: 5px;
-`;
-
-const FilterSizeOption = styled.option``;
-*/
-
 const AddContainer = styled.div`
   width: 50%;
   display: flex;
@@ -131,7 +95,7 @@ const Button = styled.button`
   }
 `;
 
-const Product = () => {
+const ProductDetail = () => {
   const [productDetail, setProductDetail] = useState({
     name: "",
     stock: 0,
@@ -143,28 +107,26 @@ const Product = () => {
     category: {},
     image: "",
   });
-  console.log(productDetail);
 
   const [productNotFound, setProductNotFound] = useState(true);
+  let navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const userGlobal = useSelector((state) => state.authUserLogin);
+  console.log(userGlobal);
 
   const params = useParams();
-
-  let userGlobal = JSON.parse(localStorage.getItem("userGlobal"));
 
   const dispatch = useDispatch();
 
   // to get product detail
   const fetchProductDetail = () => {
     Axios.get(
-      "http://localhost:5000/products/get-product-byId/" + params.productId
+      `${API_URL}/products/get-product-byId/` + params.productId
     )
       .then((result) => {
-        console.log(result);
         if (result.status == 200) {
           setProductDetail(result.data);
           setProductNotFound(false);
-          console.log(productDetail);
         } else {
           swal.fire({
             title: `Product with ID ${params.productId} has not been found`,
@@ -198,14 +160,17 @@ const Product = () => {
   };
 
   const addToCartHandler = () => {
+    if (!userGlobal.id) {
+      navigate("/login");
+      return;
+    }
+
     Axios.get(`http://localhost:5000/cart`, {
       params: {
         userId: userGlobal.id,
         productId: productDetail.id,
       },
     }).then((result) => {
-      console.log(result.data);
-
       // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
       let initalQty = result.data.length ? result.data[0].qty : 0;
       Axios.patch(
@@ -246,16 +211,6 @@ const Product = () => {
     });
   };
 
-  // logs in user with ID 1 for testing add to cart functionality.
-  const dummyLoginHandler = () => {
-    dispatch({
-      type: "LOGIN_USER",
-      payload: {
-        id: 1,
-      },
-    });
-  };
-
   return (
     <Container>
       <Wrapper>
@@ -293,4 +248,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductDetail;

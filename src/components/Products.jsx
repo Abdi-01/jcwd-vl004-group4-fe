@@ -1,7 +1,6 @@
-import { useState } from "react";
 import styled from "styled-components";
 // import { popularProducts } from "../data";
-import Product from "./Product";
+import ProductDetail from "./ProductDetail";
 
 const Container = styled.div`
     padding: 20px;
@@ -15,7 +14,7 @@ const Products = ({ products }) => {
   return (
     <Container>
       {products.map(product => (
-        <Product product={product} key={product.id} />
+        <ProductDetail product={product} key={product.id} />
       ))}
     </Container>
   );
