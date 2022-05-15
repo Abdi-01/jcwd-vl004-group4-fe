@@ -8,6 +8,7 @@ import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MyNavbar from "./components/MyNavbar";
 
@@ -96,6 +97,7 @@ const App = () => {
         <Route element={<ResetPassword />} path="/reset-password/:token" />
         <Route element={<Profile />} path="/profile/:userId" />
         <Route element={<Cart />} path="/cart" />
+        <Route element={<Checkout />} path="/checkout" />
 
         <Route element={<ProductList />} path="/product-list" />
 
