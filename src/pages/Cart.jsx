@@ -5,8 +5,12 @@ import axios from "axios";
 import { API_URL } from "../constants/API";
 import Footer from "../components/Footer";
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
 
 import CartItem from "../components/CartItem.jsx";
+import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
 const Cart = () => {
 
@@ -15,9 +19,57 @@ const Cart = () => {
   let [totalItems, setTotalItems] = useState(0)
 
   const userId = useSelector(state => state.authUserLogin.id)
+  const adminId = useSelector(state => state)
+  console.log(adminId)
 
   const shippingDummy = 12000
+  const navigate = useNavigate()
 
+  // thousand separator totalPrice
+  const finalPrice = (totalPrice + shippingDummy).toLocaleString()
+  const checkoutPrice = totalPrice + shippingDummy
+
+  // posting invoice header
+  const checkoutHandler = () => {
+    // create invoice header
+    const randomCode = Math.floor((Math.random() * 1000) + 1);
+    const headerData = {
+      invoice_code: randomCode,
+      shipping_price: 12000,
+      total_price: checkoutPrice,
+      userId: userId,
+      adminId: 1
+    }
+    swal({
+      title: "Proceed to checkout?",
+      text: "You will redirect to checkout page and tour cart item will be gone!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          axios.post(`${API_URL}/checkout/invoice/add`, headerData)
+            .then(response => {
+              if (response.data.newHeader) {
+                console.log(response.data.newHeader)
+                console.log(response.data.deleted)
+                swal('Checkout updated!', response.data.message, 'success')
+              } else {
+                console.log(response.data.invoiceHeader)
+                swal('New checkout created!', response.data.message, 'success')
+              }
+              navigate('/checkout')
+            })
+            .catch(error => {
+              console.log(error.message)
+            })
+        } else {
+          swal("Your imaginary file is safe!");
+        }
+      });
+
+  }
 
   useEffect(() => {
     const fetchCartItems = () => {
@@ -33,22 +85,6 @@ const Cart = () => {
     fetchCartItems()
   }, [userId])
 
-  // thousand separator totalPrice
-  const finalPrice = (totalPrice + shippingDummy).toLocaleString()
-
-  // useEffect(() => {
-  //   let price = 0;
-  //   let items = 0;
-
-  //   cart.forEach(item => {
-  //     items += item.qty
-  //     price += item.qty * item.product.sell_price
-  //   })
-  //   console.log(`totalitems: ${totalItems}`)
-
-  //   setTotalItems(items)
-  //   setTotalPrice(price)
-  // }, [cart, totalPrice, totalItems, setTotalPrice, setTotalItems])
 
   return (
     <>
@@ -82,9 +118,11 @@ const Cart = () => {
             <span><b>TOTAL : </b></span>
             <span>Rp.{finalPrice}</span>
           </div>
-          <Button className="btn btn-info" style={{ fontWeight: "bold" }} >
-            Proceed To Checkout
-          </Button>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: 'center' }} >
+            <Button className="btn btn-info w-100" style={{ fontWeight: "bold" }} onClick={checkoutHandler} disabled={cart.length < 1} >
+              Proceed To Checkout
+            </Button>
+          </div>
         </div>
       </div>
       <Footer />
