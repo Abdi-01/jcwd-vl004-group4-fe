@@ -119,7 +119,7 @@ const Cart = () => {
             <span>Rp.{finalPrice}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: 'center' }} >
-            <Button className="btn btn-info w-100" style={{ fontWeight: "bold" }} onClick={checkoutHandler} >
+            <Button className="btn btn-info w-100" style={{ fontWeight: "bold" }} onClick={checkoutHandler} disabled={cart.length < 1} >
               Proceed To Checkout
             </Button>
           </div>
