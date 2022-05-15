@@ -1,13 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import HomeAdmin from "./admin/home/HomeAdmin";
 
 const Admin = () => {
-  const admin = useSelector((state) => state.authAdminLogin);
-
-  if (admin.id) {
+  if (localStorage.getItem("token_shutter_admin")) {
     return <HomeAdmin />;
   } else {
     return (

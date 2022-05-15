@@ -16,8 +16,7 @@ import Swal from "sweetalert2";
 import Axios from "axios";
 import { API_URL } from "../constants/API";
 import { Link, useNavigate } from "react-router-dom";
-import { authUserLogin } from "../redux/actions/userAction";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -56,11 +55,12 @@ const Footer = styled.div`
   font-size: 16px;
 `;
 
-const Login = (props) => {
+const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -78,7 +78,10 @@ const Login = (props) => {
       Axios.post(`${API_URL}/users/login`, values)
         .then((res) => {
           localStorage.setItem("token_shutter", JSON.stringify(res.data.token));
-          props.authUserLogin(res.data.dataLogin);
+          dispatch({
+            type: "USER_LOGIN_SUCCESS",
+            payload: res.data.dataLogin,
+          });
           setIsLogin(true);
           setResMsg(res.data.message);
         })
@@ -179,4 +182,4 @@ const Login = (props) => {
   );
 };
 
-export default connect(null, { authUserLogin })(Login);
+export default Login;

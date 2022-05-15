@@ -4,13 +4,14 @@ import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { API_URL } from "../constants/API";
+import axios from 'axios'
+import swal2 from 'sweetalert'
 
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCartData } from "../redux/actions/cart";
 
 const Container = styled.div``;
 
@@ -108,6 +109,10 @@ const ProductDetail = () => {
     image: "",
   });
 
+
+  const userToken = localStorage.getItem('token_shutter')
+
+
   const [productNotFound, setProductNotFound] = useState(true);
   let navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
@@ -115,8 +120,41 @@ const ProductDetail = () => {
   console.log(userGlobal);
 
   const params = useParams();
+  const dispatch = useDispatch()
 
-  const dispatch = useDispatch();
+  const addToCart = () => {
+
+    // login is required
+    if (!userToken) {
+      swal2("Log in is required!");
+      navigate('/login')
+    } else {
+      const data = {
+        qty: quantity,
+        userId: userGlobal.id,
+        productId: productDetail.id
+      }
+      axios.post(`${API_URL}/cart/add-cart`, data)
+        .then(response => {
+          console.log(response.data)
+          if (response.data.conflict) {
+            return swal2(response.data.warning, response.data.conflict, "error");
+          } else if (response.data.count) {
+            dispatch({
+              type: "CART_COUNT",
+              payload: response.data.count
+            })
+          }
+          swal2("Success!", response.data.message, "success");
+
+        })
+        .catch(err => {
+          console.log(err.message)
+          swal2("Failed!", "Input quantity exceeds item stock!", "error");
+        })
+    }
+
+  }
 
   // to get product detail
   const fetchProductDetail = () => {
@@ -159,57 +197,57 @@ const ProductDetail = () => {
     }
   };
 
-  const addToCartHandler = () => {
-    if (!userGlobal.id) {
-      navigate("/login");
-      return;
-    }
+  // const addToCartHandler = () => {
+  //   if (!userGlobal.id) {
+  //     navigate("/login");
+  //     return;
+  //   }
 
-    Axios.get(`http://localhost:5000/cart`, {
-      params: {
-        userId: userGlobal.id,
-        productId: productDetail.id,
-      },
-    }).then((result) => {
-      // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
-      let initalQty = result.data.length ? result.data[0].qty : 0;
-      Axios.patch(
-        "http://localhost:5000/cart",
-        {
-          userId: userGlobal.id,
-          qty: initalQty + quantity,
-          productId: parseInt(params.productId),
-        },
-        {
-          params: {
-            userId: userGlobal.id,
-            productId: productDetail.id,
-          },
-        }
-      )
-        .then(() => {
-          swal.fire({
-            title: "Item added sucessfully",
-            icon: "success",
-            confirm: true,
-          });
-          getCartData(userGlobal.id);
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log({
-            userId: userGlobal.id,
-            qty: initalQty + quantity,
-            productId: parseInt(params.productId),
-          });
-          swal.fire({
-            title: "There is some mistake in server",
-            icon: "warning",
-            confirm: true,
-          });
-        });
-    });
-  };
+  //   Axios.get(`http://localhost:5000/cart`, {
+  //     params: {
+  //       userId: userGlobal.id,
+  //       productId: productDetail.id,
+  //     },
+  //   }).then((result) => {
+  //     // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
+  //     let initalQty = result.data.length ? result.data[0].qty : 0;
+  //     Axios.patch(
+  //       "http://localhost:5000/cart",
+  //       {
+  //         userId: userGlobal.id,
+  //         qty: initalQty + quantity,
+  //         productId: parseInt(params.productId),
+  //       },
+  //       {
+  //         params: {
+  //           userId: userGlobal.id,
+  //           productId: productDetail.id,
+  //         },
+  //       }
+  //     )
+  //       .then(() => {
+  //         swal.fire({
+  //           title: "Item added sucessfully",
+  //           icon: "success",
+  //           confirm: true,
+  //         });
+  //         getCartData(userGlobal.id);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         console.log({
+  //           userId: userGlobal.id,
+  //           qty: initalQty + quantity,
+  //           productId: parseInt(params.productId),
+  //         });
+  //         swal.fire({
+  //           title: "There is some mistake in server",
+  //           icon: "warning",
+  //           confirm: true,
+  //         });
+  //       });
+  //   });
+  // };
 
   return (
     <Container>
@@ -224,7 +262,7 @@ const ProductDetail = () => {
               <Title>{productDetail.name}</Title>
               <Desc>{productDetail.description}</Desc>
               <Price>
-                Rp{productDetail.sell_price.toLocaleString("id-ID")}
+                Rp.{productDetail.sell_price.toLocaleString("id-ID")}
               </Price>
               <Text>Category: {productDetail.category.name}</Text>
               <Text>Stock: {productDetail.stock} pcs</Text>
@@ -237,7 +275,7 @@ const ProductDetail = () => {
                   <Amount>{quantity}</Amount>
                   <Add onClick={() => qtyHandler("increment")} />
                 </AmountContainer>
-                <Button onClick={() => addToCartHandler()}>ADD TO CART</Button>
+                <Button onClick={addToCart} >ADD TO CART</Button>
               </AddContainer>
             </InfoContainer>
           </>

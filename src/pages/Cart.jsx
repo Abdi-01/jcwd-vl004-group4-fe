@@ -1,246 +1,94 @@
-import { Add, Remove } from "@material-ui/icons";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import styles from "./Cart.module.css";
+import { Button } from 'react-bootstrap'
+import axios from "axios";
+import { API_URL } from "../constants/API";
 import Footer from "../components/Footer";
-import { mobile } from "../responsive";
+import { useSelector } from 'react-redux'
 
-const Container = styled.div``;
-
-const Wrapper = styled.div`
-  padding: 20px;
-  ${mobile({ padding: "10px" })}
-`;
-
-const Title = styled.h1`
-  font-weight: 300;
-  text-align: center;
-`;
-
-const Top = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-const TopButton = styled.button`
-  padding: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  border: ${(props) => props.type === "filled" && "none"};
-  background-color: ${(props) =>
-    props.type === "filled" ? "black" : "transparent"};
-  color: ${(props) => props.type === "filled" && "white"};
-`;
-
-const TopTexts = styled.div`
-  ${mobile({ display: "none" })}
-`;
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0px 10px;
-`;
-
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
-`;
-
-const Info = styled.div`
-  flex: 3;
-`;
-
-const Product = styled.div`
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
-`;
-
-const ProductDetail = styled.div`
-  flex: 2;
-  display: flex;
-`;
-
-const Image = styled.img`
-  width: 200px;
-`;
-
-const Details = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-`;
-
-const ProductName = styled.span``;
-
-const ProductId = styled.span``;
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-`;
-
-const ProductSize = styled.span``;
-
-const PriceDetail = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ProductAmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ProductAmount = styled.div`
-  font-size: 24px;
-  margin: 5px;
-  ${mobile({ margin: "5px 15px" })}
-`;
-
-const ProductPrice = styled.div`
-  font-size: 30px;
-  font-weight: 200;
-  ${mobile({ marginBottom: "20px" })}
-`;
-
-const Hr = styled.hr`
-  background-color: #eee;
-  border: none;
-  height: 1px;
-`;
-
-const Summary = styled.div`
-  flex: 1;
-  border: 0.5px solid lightgray;
-  border-radius: 10px;
-  padding: 20px;
-  height: 50vh;
-`;
-
-const SummaryTitle = styled.h1`
-  font-weight: 200;
-`;
-
-const SummaryItem = styled.div`
-  margin: 30px 0px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: ${(props) => props.type === "total" && "500"};
-  font-size: ${(props) => props.type === "total" && "24px"};
-`;
-
-const SummaryItemText = styled.span``;
-
-const SummaryItemPrice = styled.span``;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: black;
-  color: white;
-  font-weight: 600;
-`;
+import CartItem from "../components/CartItem.jsx";
 
 const Cart = () => {
+
+  const [cart, setCart] = useState([])
+  const [totalPrice, setTotalPrice] = useState(0)
+  let [totalItems, setTotalItems] = useState(0)
+
+  const userId = useSelector(state => state.authUserLogin.id)
+
+  const shippingDummy = 12000
+
+
+  useEffect(() => {
+    const fetchCartItems = () => {
+      axios.get(`${API_URL}/cart/user/${+userId}`)
+        .then(response => {
+          console.log(response.data.rows)
+          setTotalItems(response.data.cartCount)
+          setTotalPrice(response.data.totalPrice)
+          setCart(response.data.rows)
+        })
+        .catch(err => console.log(err))
+    }
+    fetchCartItems()
+  }, [userId])
+
+  // thousand separator totalPrice
+  const finalPrice = (totalPrice + shippingDummy).toLocaleString()
+
+  // useEffect(() => {
+  //   let price = 0;
+  //   let items = 0;
+
+  //   cart.forEach(item => {
+  //     items += item.qty
+  //     price += item.qty * item.product.sell_price
+  //   })
+  //   console.log(`totalitems: ${totalItems}`)
+
+  //   setTotalItems(items)
+  //   setTotalPrice(price)
+  // }, [cart, totalPrice, totalItems, setTotalPrice, setTotalItems])
+
   return (
-    <Container>
-      <Wrapper>
-        <Title>YOUR BAG</Title>
-        <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
-          <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
-            <TopText>Your Wishlist (0)</TopText>
-          </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
-        </Top>
-        <Bottom>
-          <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> JESSIE THUNDER SHOES
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>
-                    <b>Size:</b> 37.5
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$ 30</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr />
-            <Product>
-              <ProductDetail>
-                <Image src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> HAKURA T-SHIRT
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  <ProductColor color="gray" />
-                  <ProductSize>
-                    <b>Size:</b> M
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>1</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$ 20</ProductPrice>
-              </PriceDetail>
-            </Product>
-          </Info>
-          <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-            <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
-            </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
-          </Summary>
-        </Bottom>
-      </Wrapper>
+    <>
+      <div className={styles.cart}>
+        {cart?.length > 0 && <div className={styles.cart__items}>
+          {cart.map(item => (
+            <CartItem item={item} key={item.id} setCart={setCart} setTotalItems={setTotalItems} setTotalPrice={setTotalPrice} totalPrice={totalPrice} totalItems={totalItems} />
+          ))}
+        </div>}
+        {cart.length === 0 && <div className={styles.cart__items}>
+          <h1>No item found in your cart</h1>
+        </div>}
+        <div className={styles.cart__summary}>
+          <h4 className={styles.summary__title}>Order Summary</h4>
+          <div className={styles.summary__price}>
+            <span><b>SUBTOTAL : </b>( {totalItems} items )</span>
+            <span>Rp.{totalPrice?.toLocaleString()}</span>
+          </div>
+          <select name="shipping" className="select" >
+            <option value="" disabled selected >Shipping Options</option>
+            <option value="">JNE</option>
+            <option value="">TIKI</option>
+            <option value="">JNT</option>
+          </select>
+          <div className={styles.summary__price}>
+            <span><b>Estimated Shipping : </b></span>
+            <span>Rp.{shippingDummy.toLocaleString()}</span>
+          </div>
+          <hr style={{ borderTop: "3px solid black" }} />
+          <div className={styles.summary__price}>
+            <span><b>TOTAL : </b></span>
+            <span>Rp.{finalPrice}</span>
+          </div>
+          <Button className="btn btn-info" style={{ fontWeight: "bold" }} >
+            Proceed To Checkout
+          </Button>
+        </div>
+      </div>
       <Footer />
-    </Container>
+    </>
   );
 };
 

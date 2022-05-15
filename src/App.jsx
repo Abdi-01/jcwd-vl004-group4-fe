@@ -20,11 +20,9 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import Verification from "./pages/Verification";
 import DisplayReport from "./pages/DisplayReport";
 import { API_URL } from "./constants/API";
-import { connect } from "react-redux";
-import { authUserLogin } from "./redux/actions/userAction";
-import { authAdminLogin } from "./redux/actions/adminAction";
+import { useDispatch } from "react-redux";
 import Axios from "axios";
-import Profile from "./pages/admin/single/Single";
+import Profile from "./pages/Profile";
 import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
@@ -32,9 +30,10 @@ import AdminResetPassword from "./pages/admin/AdminResetPassword";
 import { FilterReport } from "./pages/FilterReport";
 import DisplayTransaction from "./pages/DisplayTransaction";
 
-const App = (props) => {
+const App = () => {
   const [user, setUser] = useState();
   const [admin, setAdmin] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
@@ -53,7 +52,10 @@ const App = (props) => {
               "token_shutter",
               JSON.stringify(res.data.token)
             );
-            props.authUserLogin(res.data.dataLogin);
+            dispatch({
+              type: "USER_LOGIN_SUCCESS",
+              payload: res.data.dataLogin,
+            });
           })
           .catch((err) => {
             console.log(err);
@@ -75,28 +77,31 @@ const App = (props) => {
               "token_shutter_admin",
               JSON.stringify(res.data.token)
             );
-            props.authAdminLogin(res.data.dataLogin);
+            dispatch({
+              type: "ADMIN_LOGIN_SUCCESS",
+              payload: res.data.dataLogin,
+            });
           })
           .catch((err) => {
             console.log(err);
           });
       }
     }
-  }, [user, admin]);
+  }, [user, admin, dispatch]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <BrowserRouter>
-        <MyNavbar />
-        <Routes>
-          <Route element={<Home />} path="/" />
-          <Route element={<Register />} path="/register" />
-          <Route element={<Verification />} path="/verification/:token" />
-          <Route element={<Login />} path="/login" />
-          <Route element={<ForgetPassword />} path="/forget-password" />
-          <Route element={<ResetPassword />} path="/reset-password/:token" />
-          <Route element={<Profile />} path="/profile" />
-          <Route element={<Cart />} path="/cart" />
+    <BrowserRouter>
+      <MyNavbar />
+      <Routes>
+        <Route element={<Home />} path="/" />
+        <Route element={<Register />} path="/register" />
+        <Route element={<Verification />} path="/verification/:token" />
+        <Route element={<Login />} path="/login" />
+        <Route element={<ForgetPassword />} path="/forget-password" />
+        <Route element={<ResetPassword />} path="/reset-password/:token" />
+        <Route element={<Profile />} path="/profile/:userId" />
+        <Route element={<Cart />} path="/cart" />
 
           <Route element={<ProductList />} path="/product-list" />
 
@@ -130,4 +135,4 @@ const App = (props) => {
   );
 };
 
-export default connect(null, { authUserLogin, authAdminLogin })(App);
+export default App;

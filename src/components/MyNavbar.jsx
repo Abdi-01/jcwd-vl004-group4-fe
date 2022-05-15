@@ -3,20 +3,29 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Badge } from "@material-ui/core";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react'
 import { connect } from "react-redux";
 import { authUserLogout } from "../redux/actions/userAction";
 import { authAdminLogout } from "../redux/actions/adminAction";
 
+
 const MyNavbar = (props) => {
   const user = useSelector((state) => state.authUserLogin);
   const admin = useSelector((state) => state.authAdminLogin);
+  const count = useSelector(state => state.cartReducer.cartCount)
 
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
 
   const onUserLogout = () => {
     props.authUserLogout();
+    dispatch({
+      type: 'CLEAR_CART'
+    })
     navigate("/");
   };
 
@@ -60,12 +69,12 @@ const MyNavbar = (props) => {
       ) : user.username ? (
         <div className="nav-right me-5">
           <Nav>
-            <Nav.Link as={Link} to="/profile">
+            <Nav.Link as={Link} to={`/profile/${user.id}`}>
               {user.username}
             </Nav.Link>
             <Nav.Link onClick={onUserLogout}>Logout</Nav.Link>
             <Nav.Link as={Link} to="/cart">
-              <Badge badgeContent={4} color="primary">
+              <Badge badgeContent={count} color="primary">
                 <ShoppingCartOutlined />
               </Badge>
             </Nav.Link>
