@@ -8,74 +8,100 @@ import { API_URL } from "../constants/API";
 import CheckoutItem from "../components/CheckoutItem";
 import swal from 'sweetalert'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 
 const Checkout = () => {
 
     const shipping = 12000
     const navigate = useNavigate()
-    const dispatch = useDispatch()
 
     const [checkoutItems, setCheckoutItems] = useState([])
-    const [paymentImg, setPaymentImg] = useState()
-    const [invoiceHeaderId, setinvoIceHeaderId] = useState()
+
+    const [totalPrice, setTotalPrice] = useState(0)
 
     const userId = useSelector(state => state.authUserLogin.id)
-    const [subTotal, setSubTotal] = useState(0)
-    // console.log(`user id: ${userId}`)
+
+
+    const shippingDummy = 12000
+
+    const checkoutPrice = totalPrice + shippingDummy
+
+    const user = useSelector(state => state.authUserLogin)
+    console.log(user)
 
     useEffect(() => {
-        const fetchCheckoutItems = () => {
-            axios.get(`${API_URL}/cart/user/${+userId}`)
-                .then(response => {
-                    console.log(response.data)
-                    setCheckoutItems(response.data.rows)
-                    setSubTotal(response.data.totalPrice)
-                })
-                .catch(err => console.log(err.message))
-        }
-        fetchCheckoutItems()
+        setCheckoutItems(JSON.parse(localStorage.getItem('checkoutItems')))
+        console.log(checkoutItems)
+        let subTotal = 0
+        checkoutItems.forEach(item => {
+            subTotal += item.qty * item.product.sell_price
+            console.log(item)
+        })
+        setTotalPrice(subTotal)
+
     }, [userId])
 
-    const getHeaderId = () => {
-        axios.post(`${API_URL}/payment/get-header-id/${+userId}`)
-            .then(response => setinvoIceHeaderId(response.data.id))
-            .catch(error => console.log(error.message))
-    }
-    getHeaderId()
+    useEffect(() => {
+        console.log(checkoutItems)
+        let subTotal = 0
+        checkoutItems.forEach(item => {
+            subTotal += item.qty * item.product.sell_price
+            console.log(item)
+        })
+        setTotalPrice(subTotal)
+    }, [checkoutItems])
 
-    const uploadHandler = e => {
+    const checkoutHandler = (e) => {
+        // create invoice header
         e.preventDefault()
-        const data = new FormData()
-        data.append('image', paymentImg)
-        data.append('invoiceHeaderId', invoiceHeaderId)
-        data.append('adminId', 1)
+        const randomCode = Math.floor((Math.random() * 1000) + 1);
+        const headerData = {
+            invoice_code: randomCode,
+            shipping_price: 12000,
+            total_price: checkoutPrice,
+            userId: userId
+        }
+        swal({
+            title: "Proceed to checkout?",
+            text: "Your checkout will be placed",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    axios.post(`${API_URL}/checkout/invoice/add`, headerData)
+                        .then(response => {
+                            if (response.data.newHeader) {
+                                console.log(response.data.newHeader)
+                                console.log(response.data.deleted)
+                                swal('Checkout updated!', response.data.message, 'success')
+                            } else {
+                                console.log(response.data.invoiceHeader)
+                                swal('New checkout created!', response.data.message, 'success')
+                            }
+                            navigate('/payment')
+                        })
+                        .catch(error => {
+                            console.log(error.message)
+                        })
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
 
-        console.log(data)
-        axios.post(`${API_URL}/payment/add-payment/${userId}`, data)
-            .then(response => {
-                swal("Payment has been recorded!", response.data, "success");
-                dispatch({
-                    type: 'CART_COUNT',
-                    payload: 0
-                })
-                navigate('/')
-            })
-            .catch(error => console.log(error.message))
     }
 
     return (
         <>
-            <div classNameName={styles.cart}>
+            <div className={styles.cart}>
                 <div className="container">
                     <h1 className="checkout_heading detail-full title">Checkout</h1>
 
                     <div className="details">
-                        <form onSubmit={uploadHandler}>
+                        <form onSubmit={checkoutHandler}>
                             <div className="details__column">
                                 <h3 className="detail-full details__header">Billing Address</h3>
 
-                                <div className="form-item detail-full">
+                                {/* <div className="form-item detail-full">
                                     <label for="fname"><i className="fa fa-user"></i> Full Name</label>
                                     <input
                                         type="text"
@@ -84,9 +110,15 @@ const Checkout = () => {
                                         placeholder="John M. Doe"
                                         required
                                     />
+                                </div> */}
+
+                                {/* try name db */}
+                                <div className="form-item detail-full">
+                                    <label for="fname"><i className="fa fa-user"></i> Full Name</label>
+                                    <h4>{user.name}</h4>
                                 </div>
 
-                                <div className="form-item detail-full">
+                                {/* <div className="form-item detail-full">
                                     <label for="email"><i className="fa fa-envelope"></i> Email</label>
                                     <input
                                         type="text"
@@ -95,6 +127,12 @@ const Checkout = () => {
                                         placeholder="john@example.com"
                                         required
                                     />
+                                </div> */}
+
+                                {/* try email db */}
+                                <div className="form-item detail-full">
+                                    <label for="email"><i className="fa fa-envelope"></i> Email</label>
+                                    <h4>{user.email}</h4>
                                 </div>
 
                                 <div className="form-item detail-full">
@@ -108,6 +146,14 @@ const Checkout = () => {
                                         placeholder="542 W. 15th Street"
                                         required
                                     />
+                                </div>
+
+                                {/* try address db */}
+                                <div className="form-item detail-full" >
+                                    <label htmlFor="address">Choose address</label>
+                                    <select name="address" id="address">
+                                        <option value="">Jakarta</option>
+                                    </select>
                                 </div>
 
                                 <div className="form-item detail-full">
@@ -176,14 +222,14 @@ const Checkout = () => {
                                     <input type="text" id="cvv" name="cvv" placeholder="352" required />
                                 </div>
 
-                                <div className="flex">
+                                {/* <div className="flex">
                                     <label htmlFor="payment">Payment Proof right here!</label>
                                     <input type="file" id="file" accept=".jpg" required onChange={event => {
                                         const file = event.target.files[0]
                                         setPaymentImg(file)
                                     }} />
-                                </div>
-                                <button className="detail-full detail__submit" type="submit">Upload Payment!</button>
+                                </div> */}
+                                <button className="detail-full detail__submit" type="submit">Create Checkout!</button>
                             </div>
                         </form>
                     </div>
@@ -200,7 +246,7 @@ const Checkout = () => {
                         <div className="cart__price">
                             <div className="price__detail">
                                 <h4>Subtotal</h4>
-                                <p>IDR {subTotal.toLocaleString()}</p>
+                                <p>IDR {totalPrice.toLocaleString()}</p>
                             </div>
                             <div className="price__detail">
                                 <h4>Shipping</h4>
@@ -208,10 +254,9 @@ const Checkout = () => {
                             </div>
                             <div className="price__total">
                                 <h4>Total</h4>
-                                <p>IDR {(subTotal + shipping).toLocaleString()}</p>
+                                <p>IDR {(totalPrice + shipping).toLocaleString()}</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

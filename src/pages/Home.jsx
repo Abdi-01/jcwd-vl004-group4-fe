@@ -6,7 +6,7 @@ import Slider from "../components/Slider";
 import styled from "styled-components";
 import Axios from "axios";
 import { API_URL } from '../constants/API'
-import { useSelector } from "react-redux";
+import { useSelector, dispatch, useDispatch } from "react-redux";
 
 const ContainerProduct = styled.div`
   padding: 20px;
@@ -15,9 +15,29 @@ const ContainerProduct = styled.div`
   justify-content: space-between;
 `;
 
+
 const Home = () => {
+
+  const userId = useSelector(state => state.authUserLogin.id)
+  const dispatch = useDispatch()
+  const [cartItems, setCartItems] = useState([])
+
   // DATA ASLI
   const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const fetchCartItems = () => {
+      Axios.get(`${API_URL}/cart/user/${+userId}`)
+        .then(response => {
+          setCartItems(response.data.rows)
+          dispatch({
+            type: "CART_COUNT",
+            payload: response.data.count
+          })
+        })
+    }
+    fetchCartItems()
+  }, [])
 
 
   useEffect(() => {
