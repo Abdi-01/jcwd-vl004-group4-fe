@@ -206,3 +206,25 @@
     font-weight: 700;
     margin-top: 5px;
   }
+
+.container-payment {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.payment-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.payment-in input {
+  margin-left: 120px;
+}
+
+
+    

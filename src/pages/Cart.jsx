@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 import CartItem from "../components/CartItem.jsx";
+import { useDispatch } from 'react-redux'
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 
@@ -27,58 +28,44 @@ const Cart = () => {
 
   // thousand separator totalPrice
   const finalPrice = (totalPrice + shippingDummy).toLocaleString()
-  const checkoutPrice = totalPrice + shippingDummy
+  const dispatch = useDispatch()
 
-  // posting invoice header
+
   const checkoutHandler = () => {
-    // create invoice header
-    const randomCode = Math.floor((Math.random() * 1000) + 1);
-    const headerData = {
-      invoice_code: randomCode,
-      shipping_price: 12000,
-      total_price: checkoutPrice,
-      userId: userId,
-      adminId: 1
-    }
     swal({
-      title: "Proceed to checkout?",
-      text: "You will redirect to checkout page and tour cart item will be gone!",
+      title: "Proceed checkout?",
+      text: "You will be redirected to checkout page!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     })
       .then((willDelete) => {
         if (willDelete) {
-          axios.post(`${API_URL}/checkout/invoice/add`, headerData)
-            .then(response => {
-              if (response.data.newHeader) {
-                console.log(response.data.newHeader)
-                console.log(response.data.deleted)
-                swal('Checkout updated!', response.data.message, 'success')
-              } else {
-                console.log(response.data.invoiceHeader)
-                swal('New checkout created!', response.data.message, 'success')
-              }
-              navigate('/checkout')
-            })
-            .catch(error => {
-              console.log(error.message)
-            })
+          localStorage.setItem('checkoutItems', JSON.stringify(cart))
+          navigate('/checkout')
         } else {
-          swal("Your imaginary file is safe!");
+          swal("You can continue shopping!");
         }
       });
-
   }
 
   useEffect(() => {
     const fetchCartItems = () => {
       axios.get(`${API_URL}/cart/user/${+userId}`)
         .then(response => {
-          console.log(response.data.rows)
-          setTotalItems(response.data.cartCount)
-          setTotalPrice(response.data.totalPrice)
-          setCart(response.data.rows)
+          if (response.data.unpaidInvoice) {
+            navigate('/payment')
+            swal("Warning!", 'Please finish or cancel your checkout first to continue shopping!', "warning");
+          } else {
+            console.log(response.data.rows)
+            setTotalItems(response.data.cartCount)
+            setTotalPrice(response.data.totalPrice)
+            setCart(response.data.rows)
+            dispatch({
+              type: "CART_COUNT",
+              payload: response.data.count
+            })
+          }
         })
         .catch(err => console.log(err))
     }
