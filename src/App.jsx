@@ -1,8 +1,10 @@
 import { React, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
-import Product from "./pages/Product";
+import ProductDetail from "./pages/ProductDetail";
 import Home from "./pages/Home";
 import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
@@ -17,6 +19,7 @@ import Admin from "./pages/Admin";
 import ProductAdmin from "./components/admin/products/Product";
 import AdminLogin from "./pages/admin/AdminLogin";
 import Verification from "./pages/Verification";
+import DisplayReport from "./pages/DisplayReport";
 import { API_URL } from "./constants/API";
 import { useDispatch } from "react-redux";
 import Axios from "axios";
@@ -25,6 +28,8 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
+import { FilterReport } from "./pages/FilterReport";
+import DisplayTransaction from "./pages/DisplayTransaction";
 
 const App = () => {
   const [user, setUser] = useState();
@@ -86,6 +91,7 @@ const App = () => {
   }, [user, admin, dispatch]);
 
   return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <BrowserRouter>
       <MyNavbar />
       <Routes>
@@ -99,25 +105,35 @@ const App = () => {
         <Route element={<Cart />} path="/cart" />
         <Route element={<Checkout />} path="/checkout" />
 
-        <Route element={<ProductList />} path="/product-list" />
+          <Route element={<ProductList />} path="/product-list" />
 
-        <Route element={<Product />} path="/product-detail/:productId" />
+          <Route
+            element={<ProductDetail />}
+            path="/product-detail/:productId"
+          />
 
-        <Route element={<Admin />} path="/admin" />
-        <Route element={<AdminLogin />} path="/admin/login" />
-        <Route
-          element={<AdminForgetPassword />}
-          path="/admin/forget-password"
-        />
-        <Route
-          element={<AdminResetPassword />}
-          path="/admin/reset-password/:token"
-        />
+          <Route
+            element={<DisplayTransaction />}
+            path="/admin/display-transaction"
+          />
+          <Route element={<DisplayReport />} path="/admin/display-report" />
+          <Route element={<FilterReport />} path="/admin/filter-report" />
+          <Route element={<Admin />} path="/admin" />
+          <Route element={<AdminLogin />} path="/admin/login" />
+          <Route
+            element={<AdminForgetPassword />}
+            path="/admin/forget-password"
+          />
+          <Route
+            element={<AdminResetPassword />}
+            path="/admin/reset-password/:token"
+          />
 
-        <Route element={<List />} path="/admin/users" />
-        <Route element={<ProductAdmin />} path="/admin/products" />
-      </Routes>
-    </BrowserRouter>
+          <Route element={<List />} path="/admin/users" />
+          <Route element={<ProductAdmin />} path="/admin/products" />
+        </Routes>
+      </BrowserRouter>
+    </MuiPickersUtilsProvider>
   );
 };
 

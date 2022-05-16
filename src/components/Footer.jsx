@@ -119,9 +119,9 @@ const Footer = () => {
         <Title>Useful Links</Title>
         <List>
           <ListItem as={Link} to="/">Home</ListItem>
-          <ListItem>My Account</ListItem>
+          <ListItem as={Link} to="">Account</ListItem>
           <ListItem as={Link} to="/product-list">Products</ListItem>
-          <ListItem>Wishlist</ListItem>
+          <ListItem as={Link} to="">Wishlist</ListItem>
           <ListItem>About Us</ListItem>
           <ListItem as={Link} to="/cart">Cart</ListItem>
         </List>

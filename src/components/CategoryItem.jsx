@@ -54,7 +54,7 @@ const CategoryItem = ({ item }) => {
       <Image src={item.img} />
       <Info>
         <Title>{item.title}</Title>
-        <Button onClick={() => navigate("/product-list?category=" + item.title)}>SHOP NOW</Button>
+        <Button onClick={() => navigate("/product-list?category=" + item.title.toLowerCase())}>SHOP NOW</Button>
       </Info>
     </Container>
   );

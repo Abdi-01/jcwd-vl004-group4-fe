@@ -1,9 +1,9 @@
 import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import StoreIcon from "@mui/icons-material/Store";
+import TableRowsIcon from '@mui/icons-material/TableRows';
 // import InsertChartIcon from "@mui/icons-material/InsertChart";
 // import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 // import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -25,7 +25,7 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <Link to="/admin" style={{ textDecoration: "none" }}>
+          <Link to="/admin/filter-report" style={{ textDecoration: "none" }}>
             <li>
               <DashboardIcon className="icon" />
               <span>Dashboard</span>
@@ -44,14 +44,18 @@ const Sidebar = () => {
               <span>Products</span>
             </li>
           </Link>
+          <Link to="/admin/display-transaction" style={{ textDecoration: "none" }}>
           <li>
             <CreditCardIcon className="icon" />
-            <span>Orders</span>
+            <span>Transaction</span>
           </li>
+          </Link>
+          <Link to="/admin/display-report" style={{ textDecoration: "none" }}>
           <li>
-            <LocalShippingIcon className="icon" />
-            <span>Delivery</span>
+            <TableRowsIcon className="icon" />
+            <span>Report</span>
           </li>
+          </Link>
         </ul>
       </div>
     </div>
