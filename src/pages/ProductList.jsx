@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Product from "../components/Product";
+import ProductDetail from "../components/ProductDetail";
 import Products from "../components/Products";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
@@ -10,7 +10,6 @@ import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-
 import { useSearchParams } from "react-router-dom";
 
 const Container = styled.div``;
@@ -52,19 +51,19 @@ const Option = styled.option``;
 
 const Input = styled.input``;
 
-
 const ProductList = () => {
   // contain all products data
 
   let [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams);
   const [products, setProducts] = useState([]);
-  let limit = 3
-  
+  let [page, setPage] = useState(1);
+  const [bestSeller, setBestSeller] = useState([]);
+
   useEffect(() => {
     getProductsData();
   }, [searchParams]);
-  
+
   const getProductsData = async () => {
     try {
       const res = await Axios.get(`${API_URL}/products/get-all-products`, {
@@ -74,12 +73,27 @@ const ProductList = () => {
           sortField: searchParams.get("sortField"),
           sortDirection: searchParams.get("sortDirection"),
           search: searchParams.get("name"),
-          limit: searchParams.get("limit"),
           offset: searchParams.get("offset"),
         },
       });
-      console.log(res);
-      setProducts(res.data.rows);
+      console.log(res.data);
+      setProducts(res.data.allProducts);
+      setPage(res.data.pageCount);
+    } catch (err) {
+      console.log(err);
+      swal.fire({
+        title: "There is some mistake in server",
+        icon: "warning",
+        confirm: true,
+      });
+      return;
+    }
+  };
+
+  const getBestSellerData = async () => {
+    try {
+      const res = await Axios.get(`${API_URL}/products/get-best-seller`);
+      setBestSeller(res.data.bestSeller);
     } catch (err) {
       console.log(err);
       swal.fire({
@@ -92,16 +106,10 @@ const ProductList = () => {
   };
 
   let paginationHandler = (page) => {
-    console.log(page)
-    let offset = (page - 1) * limit
-    setOffset(offset)
+    console.log(page);
+    let offset = (page - 1) * 8; // 8 is limit
+    setOffset(offset);
   };
-
-  // let setLimit = (limit) => {
-  //   console.log(limit);
-  //   searchParams.set("limit", limit);
-  //   setSearchParams(searchParams);
-  // };
 
   let setOffset = (offset) => {
     console.log(offset);
@@ -154,10 +162,13 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
-          <Select onChange={(ev) => setCategory(ev.target.value)}>
-            <Option disabled selected>
+          <Select
+            defaultValue={searchParams.get("category")}
+            onChange={(ev) => setCategory(ev.target.value)}
+          >
+            {/* <Option disabled selected>
               Categories:
-            </Option>
+            </Option> */}
             <Option value="">Show All</Option>
             <Option value="tablet">Tablet</Option>
             <Option value="capsule">Capsule</Option>
@@ -183,6 +194,7 @@ const ProductList = () => {
             <Option value="Price (DESC)">Price (DESC)</Option>
             <Option value="Name (ASC)">A - Z</Option>
             <Option value="Name (DESC)">Z - A</Option>
+            <Option value="Best Seller">Best Seller</Option>
           </Select>
         </Filter>
         <Filter>
@@ -195,11 +207,17 @@ const ProductList = () => {
       </FilterContainer>
       <ContainerProduct>
         {products.map((product) => (
-          <Product product={product} key={product.id} />
+          <ProductDetail product={product} key={product.id} />
         ))}
       </ContainerProduct>
       <Stack direction="row" justifyContent="center" spacing={2}>
-        <Pagination count={10} variant="outlined" siblingCount={1} shape="rounded" onChange={(ev, page) => paginationHandler(page)}/>
+        <Pagination
+          count={page}
+          variant="outlined"
+          siblingCount={1}
+          shape="rounded"
+          onChange={(ev, page) => paginationHandler(page)}
+        />
       </Stack>
       <Footer />
     </Container>

@@ -71,14 +71,14 @@ const Icon = styled.div`
   }
 `;
 
-const Product = ({ product }) => {
+const ProductDetail = ({ product }) => {
 
   const userId = useSelector(state => state.authUserLogin.id)
   console.log(userId);
 
 
   return (
-    <Container as={Link} to={`/product-detail/${product.id}`}>
+    <Container as={Link} to={`/product-detail/${product.id}`}> 
       <Circle />
 
       {/* DATA ASLI */}
@@ -101,4 +101,4 @@ const Product = ({ product }) => {
   );
 };
 
-export default Product;
+export default ProductDetail;

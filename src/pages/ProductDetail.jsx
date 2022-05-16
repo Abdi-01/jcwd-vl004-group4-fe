@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Add, Category, Details, Remove } from "@material-ui/icons";
+import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
@@ -11,8 +11,7 @@ import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from 'react-router-dom'
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -97,7 +96,7 @@ const Button = styled.button`
   }
 `;
 
-const Product = () => {
+const ProductDetail = () => {
   const [productDetail, setProductDetail] = useState({
     name: "",
     stock: 0,
@@ -109,15 +108,16 @@ const Product = () => {
     category: {},
     image: "",
   });
-  console.log(productDetail);
 
-  const navigate = useNavigate()
-  const userGlobal = useSelector(state => state.authUserLogin)
+
   const userToken = localStorage.getItem('token_shutter')
 
 
   const [productNotFound, setProductNotFound] = useState(true);
+  let navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const userGlobal = useSelector((state) => state.authUserLogin);
+  console.log(userGlobal);
 
   const params = useParams();
   const dispatch = useDispatch()
@@ -159,14 +159,12 @@ const Product = () => {
   // to get product detail
   const fetchProductDetail = () => {
     Axios.get(
-      "http://localhost:5000/products/get-product-byId/" + params.productId
+      `${API_URL}/products/get-product-byId/` + params.productId
     )
       .then((result) => {
-        console.log(result);
         if (result.status == 200) {
           setProductDetail(result.data);
           setProductNotFound(false);
-          console.log(productDetail);
         } else {
           swal.fire({
             title: `Product with ID ${params.productId} has not been found`,
@@ -199,6 +197,57 @@ const Product = () => {
     }
   };
 
+  // const addToCartHandler = () => {
+  //   if (!userGlobal.id) {
+  //     navigate("/login");
+  //     return;
+  //   }
+
+  //   Axios.get(`http://localhost:5000/cart`, {
+  //     params: {
+  //       userId: userGlobal.id,
+  //       productId: productDetail.id,
+  //     },
+  //   }).then((result) => {
+  //     // Initialize to zero if cart doesn't exist for product id. Otherwise add in existing quantity
+  //     let initalQty = result.data.length ? result.data[0].qty : 0;
+  //     Axios.patch(
+  //       "http://localhost:5000/cart",
+  //       {
+  //         userId: userGlobal.id,
+  //         qty: initalQty + quantity,
+  //         productId: parseInt(params.productId),
+  //       },
+  //       {
+  //         params: {
+  //           userId: userGlobal.id,
+  //           productId: productDetail.id,
+  //         },
+  //       }
+  //     )
+  //       .then(() => {
+  //         swal.fire({
+  //           title: "Item added sucessfully",
+  //           icon: "success",
+  //           confirm: true,
+  //         });
+  //         getCartData(userGlobal.id);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         console.log({
+  //           userId: userGlobal.id,
+  //           qty: initalQty + quantity,
+  //           productId: parseInt(params.productId),
+  //         });
+  //         swal.fire({
+  //           title: "There is some mistake in server",
+  //           icon: "warning",
+  //           confirm: true,
+  //         });
+  //       });
+  //   });
+  // };
 
   return (
     <Container>
@@ -237,4 +286,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductDetail;

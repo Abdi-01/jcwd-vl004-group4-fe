@@ -25,24 +25,22 @@ export const sliderItems = [
 export const categories = [
   {
     id: 1,
-    // img: "https://images.unsplash.com/photo-1573883429746-084be9b5cfca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGlsbHN8ZW58MHx8MHx8&w=1000&q=80",
     img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-1-5/512/8-256.png",
     title: "TABLET",
   },
   {
     id: 2,
-    // img: "https://images.unsplash.com/photo-1630094539416-5e17c6191be5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
     img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-2-5/512/87-256.png",
     title: "CAPSULE",
   },
   {
     id: 3,
-    // img: "https://images.unsplash.com/photo-1612475498348-fb774b4ebf33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1607&q=80",
     img: "https://cdn4.iconfinder.com/data/icons/medical-and-health-1-5/512/15-512.png",
     title: "LIQUID",
   },
 ];
 
+/*
 export const popularProducts = [
   {
     id: 1,
@@ -77,3 +75,4 @@ export const popularProducts = [
     img: "https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png",
   },
 ];
+*/
