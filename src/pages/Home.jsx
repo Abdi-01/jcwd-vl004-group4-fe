@@ -58,9 +58,9 @@ const Home = () => {
   return (
     <div>
       <Slider />
-      <h2>CATEGORIES:</h2>
+      <h2 style={{ marginTop: "10px" }}>CATEGORIES:</h2>
       <Categories />
-      <h2>LATEST PRODUCTS:</h2>
+      <h2>NEW PRODUCTS:</h2>
       <ContainerProduct>
         {products.map((product) => (
           <ProductDetail product={product} key={product.id} />

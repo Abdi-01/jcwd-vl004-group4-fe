@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -29,15 +29,19 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
-import { FilterReport } from "./pages/FilterReport";
+import FilterReport from "./pages/FilterReport";
 import DisplayTransaction from "./pages/DisplayTransaction";
 import AddProduct from "./components/admin/products/AddProduct";
 import DetailProduct from "./components/admin/products/DetailProduct";
 import EditProduct from "./components/admin/products/EditProduct";
 import RegisterAdmin from "./pages/admin/register/RegisterAdmin";
+import AboutUs from "./pages/AboutUs";
 
 const App = () => {
+  const [user,setUser] = useState()
+  const [admin, setAdmin] = useState() // it is not used
   const dispatch = useDispatch();
+  let [tokenChecked, setTokenChecked] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
@@ -46,9 +50,7 @@ const App = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token_shutter")
-            )}`,
+            Authorization: `Bearer ${user}`,
           },
         }
       )
@@ -59,37 +61,44 @@ const App = () => {
             type: "USER_LOGIN_SUCCESS",
             payload: res.data.dataLogin,
           });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    } else if (localStorage.getItem("token_shutter_admin")) {
-      Axios.post(
-        `${API_URL}/admin/keep-login`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token_shutter_admin")
-            )}`,
-          },
-        }
-      )
-        .then((res) => {
-          localStorage.setItem(
-            "token_shutter_admin",
-            JSON.stringify(res.data.token)
-          );
-          dispatch({
-            type: "ADMIN_LOGIN_SUCCESS",
-            payload: res.data.dataLogin,
-          });
+          setTokenChecked(true);
         })
         .catch((err) => {
           console.log(err);
+          setTokenChecked(true);
         });
+    } else if (localStorage.getItem("token_shutter_admin")) {
+      const loggedInAdmin = localStorage.getItem("token_shutter_admin");
+      if (loggedInAdmin) {
+        Axios.post(
+          `${API_URL}/admin/keep-login`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${loggedInAdmin}`,
+            },
+          }
+        )
+          .then((res) => {
+            localStorage.setItem("token_shutter_admin", res.data.token);
+            dispatch({
+              type: "ADMIN_LOGIN_SUCCESS",
+              payload: res.data.dataLogin,
+            });
+            console.log("admin logged in");
+            setTokenChecked(true);
+          })
+          .catch((err) => {
+            console.log(err);
+            setTokenChecked(true);
+          });
+      }
+    } else {
+      setTokenChecked(true);
     }
-  }, [dispatch]);
+  }, []);
+
+  if (!tokenChecked) return <></>;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -113,7 +122,7 @@ const App = () => {
             element={<ProductDetail />}
             path="/product-detail/:productId"
           />
-
+          <Route element={<AboutUs />} path="/about-us" />
           <Route
             element={<DisplayTransaction />}
             path="/admin/display-transaction"

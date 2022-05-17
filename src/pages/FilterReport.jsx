@@ -9,10 +9,15 @@ import { CostChart } from "../components/CostChart";
 import { addDays } from "date-fns";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/admin/sidebar/Sidebar";
 
-export const FilterReport = () => {
+const FilterReport = () => {
   const [startDate, setStartDate] = useState(addDays(new Date(), -30));
   const [endDate, setEndDate] = useState(new Date());
+  const admin = useSelector((state) => state.authAdminLogin);
+  const navigate = useNavigate();
 
   let [summary, setSummary] = useState({
     numberOfSales: 0,
@@ -24,11 +29,26 @@ export const FilterReport = () => {
   console.log(JSON.stringify(summary));
 
   let fetchSummary = async () => {
+    if (!admin.id) {
+      console.log("null admin");
+      swal
+        .fire({
+          title: "You don't have access to this page",
+          icon: "warning",
+          confirm: true,
+        })
+        .then(() => {
+          navigate("/");
+        });
+      return;
+    }
+
     try {
       let res = await Axios.get(`${API_URL}/report/get-filter-report`, {
         params: {
           min: startDate,
           max: endDate,
+          adminId: admin.id,
         },
       });
       console.log(res.data);
@@ -48,24 +68,44 @@ export const FilterReport = () => {
     console.log("Use effect called");
     console.log(startDate);
     console.log(endDate);
-    fetchSummary();
+    if (startDate > endDate) {
+      swal
+        .fire({
+          title: "End date should be greater than start date",
+          icon: "warning",
+          confirm: true,
+        })
+      return;
+    } else {
+      fetchSummary();
+    }
   }, [startDate, endDate]);
 
   return (
-    <Container>
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+      }}
+    >
+      <Sidebar />
       <div
         classNameName="container"
         style={{
-          marginTop: "100px",
+          marginTop: "70px",
+          display: admin.id ? "block" : "none",
+          flex: 6,
         }}
       >
         <div className="tabcontent">
-          <span style={{color: "#0e4c95", fontWeight: "bold"}}>Select Dates:</span>
+          <span style={{ color: "#0e4c95", fontWeight: "bold", marginLeft: "10px" }}>
+            Select Dates:
+          </span>
           <DatePicker
             style={{ marginLeft: "20px" }}
             disableFuture
             openTo="year"
-            format="dd/MM/yyyy"
+            format="yyyy-MM-dd"
             label="Start Date"
             views={["year", "month", "date"]}
             value={startDate}
@@ -75,7 +115,7 @@ export const FilterReport = () => {
             style={{ marginLeft: "20px" }}
             disableFuture
             openTo="year"
-            format="dd/MM/yyyy"
+            format="yyyy-MM-dd"
             label="End Date"
             views={["year", "month", "date"]}
             value={endDate}
@@ -83,8 +123,8 @@ export const FilterReport = () => {
           />
         </div>
 
-        <div className="row mt-5">
-          <div className="col-sm fw-3">
+        <div className="row m-5">
+          <div className="col-sm fw-3 ">
             <Card>
               <p className="pb-0 p-3 fw-bold fs-5 text-info">
                 Number of Sales:{" "}
@@ -120,9 +160,17 @@ export const FilterReport = () => {
           </div>
         </div>
         <div className="row">
-          <div style={{marginTop: "30px", marginBottom: "0px"}}>
-            <span style={{marginLeft: "150px",textAlign: "start"}}>in million (Rp)</span><span style={{marginLeft: "290px", textAlign: "center"}}>in million (Rp)</span>
-            </div>
+          <div style={{ fontWeight: "bold", color: "#23cde8" }}>
+            <span style={{ marginLeft: "130px", textAlign: "center", fontSize: "17px"}}>
+              Revenue in Million (Rp)
+            </span>
+            <span style={{ marginLeft: "260px", textAlign: "center", fontSize: "17px" }}>
+              Profit in Million (Rp)
+            </span>
+            <span style={{ marginLeft: "260px", textAlign: "center", fontSize: "17px" }}>
+              Costs Proportion
+            </span>
+          </div>
           <div className="col-sm">
             <RevenueChart
               startDate={startDate}
@@ -140,6 +188,8 @@ export const FilterReport = () => {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
+
+export default FilterReport;
