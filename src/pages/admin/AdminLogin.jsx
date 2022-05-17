@@ -53,7 +53,7 @@ const Footer = styled.div`
   font-size: 16px;
 `;
 
-const AdminLogin = (props) => {
+const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [resMsg, setResMsg] = useState("");

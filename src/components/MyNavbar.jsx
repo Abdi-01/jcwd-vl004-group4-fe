@@ -4,28 +4,24 @@ import { Badge } from "@material-ui/core";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from 'react'
 import { connect } from "react-redux";
 import { authUserLogout } from "../redux/actions/userAction";
 import { authAdminLogout } from "../redux/actions/adminAction";
 
-
 const MyNavbar = (props) => {
   const user = useSelector((state) => state.authUserLogin);
   const admin = useSelector((state) => state.authAdminLogin);
-  const count = useSelector(state => state.cartReducer.cartCount)
+  const count = useSelector((state) => state.cartReducer.cartCount);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
 
   const onUserLogout = () => {
     props.authUserLogout();
     dispatch({
-      type: 'CLEAR_CART'
-    })
+      type: "CLEAR_CART",
+    });
     navigate("/");
   };
 

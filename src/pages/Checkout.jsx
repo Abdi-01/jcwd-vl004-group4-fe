@@ -128,41 +128,16 @@ const Checkout = () => {
                             <div className="details__column">
                                 <h3 className="detail-full details__header">Billing Address</h3>
 
-                                {/* <div className="form-item detail-full">
-                                    <label for="fname"><i className="fa fa-user"></i> Full Name</label>
-                                    <input
-                                        type="text"
-                                        id="fname"
-                                        name="firstname"
-                                        placeholder="John M. Doe"
-                                        required
-                                    />
-                                </div> */}
-
-                                {/* try name db */}
                                 <div className="form-item detail-full">
                                     <label for="fname"><i className="fa fa-user"></i> Full Name</label>
                                     <h4>{user.name}</h4>
                                 </div>
 
-                                {/* <div className="form-item detail-full">
-                                    <label for="email"><i className="fa fa-envelope"></i> Email</label>
-                                    <input
-                                        type="text"
-                                        id="email"
-                                        name="email"
-                                        placeholder="john@example.com"
-                                        required
-                                    />
-                                </div> */}
-
-                                {/* try email db */}
                                 <div className="form-item detail-full">
                                     <label for="email"><i className="fa fa-envelope"></i> Email</label>
                                     <h4>{user.email}</h4>
                                 </div>
 
-                                {/* try address db */}
                                 <div className="form-item detail-full" >
                                     <label htmlFor="address" style={{ marginBottom: '10px' }} >Choose Address</label>
                                     <select name="address" id="address" style={{ borderRadius: '5px', border: "solid black 3px" }}>
@@ -226,13 +201,6 @@ const Checkout = () => {
                                     <input type="text" id="cvv" name="cvv" placeholder="352" required />
                                 </div>
 
-                                {/* <div className="flex">
-                                    <label htmlFor="payment">Payment Proof right here!</label>
-                                    <input type="file" id="file" accept=".jpg" required onChange={event => {
-                                        const file = event.target.files[0]
-                                        setPaymentImg(file)
-                                    }} />
-                                </div> */}
                                 <button className="detail-full detail__submit" type="submit">Create Checkout!</button>
                             </div>
                         </form>

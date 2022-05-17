@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -10,7 +10,7 @@ import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-import Payment from './pages/payment'
+import Payment from "./pages/payment";
 import Checkout from "./pages/Checkout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MyNavbar from "./components/MyNavbar";
@@ -34,65 +34,62 @@ import DisplayTransaction from "./pages/DisplayTransaction";
 import AddProduct from "./components/admin/products/AddProduct";
 import DetailProduct from "./components/admin/products/DetailProduct";
 import EditProduct from "./components/admin/products/EditProduct";
+import RegisterAdmin from "./pages/admin/register/RegisterAdmin";
 
 const App = () => {
-  const [user, setUser] = useState();
-  const [admin, setAdmin] = useState();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
-      const loggedInUser = localStorage.getItem("token_shutter");
-      const foundUser = JSON.parse(loggedInUser);
-      setUser(foundUser);
-
-      if (loggedInUser) {
-        Axios.post(
-          `${API_URL}/users/keep-login`,
-          {},
-          { headers: { Authorization: `Bearer ${user}` } }
-        )
-          .then((res) => {
-            localStorage.setItem(
-              "token_shutter",
-              JSON.stringify(res.data.token)
-            );
-            dispatch({
-              type: "USER_LOGIN_SUCCESS",
-              payload: res.data.dataLogin,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
+      Axios.post(
+        `${API_URL}/users/keep-login`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token_shutter")
+            )}`,
+          },
+        }
+      )
+        .then((res) => {
+          // console.log(res.data);
+          localStorage.setItem("token_shutter", JSON.stringify(res.data.token));
+          dispatch({
+            type: "USER_LOGIN_SUCCESS",
+            payload: res.data.dataLogin,
           });
-      }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     } else if (localStorage.getItem("token_shutter_admin")) {
-      const loggedInAdmin = localStorage.getItem("token_shutter_admin");
-      const foundAdmin = JSON.parse(loggedInAdmin);
-      setAdmin(foundAdmin);
-
-      if (loggedInAdmin) {
-        Axios.post(
-          `${API_URL}/admin/keep-login`,
-          {},
-          { headers: { Authorization: `Bearer ${admin}` } }
-        )
-          .then((res) => {
-            localStorage.setItem(
-              "token_shutter_admin",
-              JSON.stringify(res.data.token)
-            );
-            dispatch({
-              type: "ADMIN_LOGIN_SUCCESS",
-              payload: res.data.dataLogin,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
+      Axios.post(
+        `${API_URL}/admin/keep-login`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token_shutter_admin")
+            )}`,
+          },
+        }
+      )
+        .then((res) => {
+          localStorage.setItem(
+            "token_shutter_admin",
+            JSON.stringify(res.data.token)
+          );
+          dispatch({
+            type: "ADMIN_LOGIN_SUCCESS",
+            payload: res.data.dataLogin,
           });
-      }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }, [user, admin, dispatch]);
+  }, [dispatch]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -133,6 +130,17 @@ const App = () => {
             element={<AdminResetPassword />}
             path="/admin/reset-password/:token"
           />
+          <Route element={<Admin />} path="/admin" />
+          <Route element={<AdminLogin />} path="/admin/login" />
+          <Route
+            element={<AdminForgetPassword />}
+            path="/admin/forget-password"
+          />
+          <Route
+            element={<AdminResetPassword />}
+            path="/admin/reset-password/:token"
+          />
+          <Route element={<RegisterAdmin />} path="/admin/register" />
 
           <Route element={<List />} path="/admin/users" />
           <Route element={<ProductAdmin />} path="/admin/products" />
