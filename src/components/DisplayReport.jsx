@@ -40,7 +40,7 @@ function Row(props) {
         </TableCell>
         <TableCell align="center">{row.createdAt}</TableCell>
         <TableCell align="center">{row.user.username}</TableCell>
-        <TableCell align="center">{row.admin.username}</TableCell>
+        <TableCell align="center">{row.status}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -58,7 +58,9 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell />
-                    <TableCell align="center" className="fw-bold">Product Name</TableCell>
+                    <TableCell align="center" className="fw-bold">
+                      Product Name
+                    </TableCell>
                     <TableCell align="center" className="fw-bold">
                       Bottle Capacity
                     </TableCell>
@@ -122,7 +124,7 @@ export default function CollapsibleTable(props) {
               User
             </TableCell>
             <TableCell align="center" className="fs-6 fw-bold">
-              Admin
+              Status
             </TableCell>
           </TableRow>
         </TableHead>

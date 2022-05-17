@@ -39,7 +39,7 @@ import AboutUs from "./pages/AboutUs";
 
 const App = () => {
   const [user,setUser] = useState()
-  const [admin, setAdmin] = useState()
+  const [admin, setAdmin] = useState() // it is not used
   const dispatch = useDispatch();
   let [tokenChecked, setTokenChecked] = useState(false);
 

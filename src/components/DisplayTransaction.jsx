@@ -87,7 +87,9 @@ function Row(props) {
         </TableCell>
         <TableCell align="center">{transaction.createdAt}</TableCell>
         <TableCell align="center">{transaction.user.username}</TableCell>
-        <TableCell align="center">{transaction.admin?.username}</TableCell>
+        <TableCell align="center">
+          {transaction.payment_confirmation.admin?.username}
+        </TableCell>
         <TableCell>
           <Image
             src={
