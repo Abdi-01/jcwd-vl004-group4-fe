@@ -5,6 +5,7 @@ const INIT_STATE = {
   password: "",
   createdAt: "",
   updatedAt: "",
+  is_super_admin: "",
 };
 
 export const authAdminLogin = (state = INIT_STATE, action) => {

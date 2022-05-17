@@ -103,7 +103,7 @@ const Register = () => {
         .catch((err) => {
           setLoading(false);
           Swal.fire({
-            text: err.message,
+            title: err.response.data.message,
             icon: "error",
           });
           // console.log(err.response.data);

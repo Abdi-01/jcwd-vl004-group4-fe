@@ -3,7 +3,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import StoreIcon from "@mui/icons-material/Store";
-import TableRowsIcon from '@mui/icons-material/TableRows';
+import TableRowsIcon from "@mui/icons-material/TableRows";
 // import InsertChartIcon from "@mui/icons-material/InsertChart";
 // import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 // import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -11,9 +11,13 @@ import TableRowsIcon from '@mui/icons-material/TableRows';
 // import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
 // import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 // import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
+  const admin = useSelector((state) => state.authAdminLogin);
+
   return (
     <div className="sidebar">
       <div className="top">
@@ -38,23 +42,34 @@ const Sidebar = () => {
               <span>Users</span>
             </li>
           </Link>
+          {admin.is_super_admin ? (
+            <Link to="/admin/register" style={{ textDecoration: "none" }}>
+              <li>
+                <AddCircleIcon className="icon" />
+                <span>Register New Admin</span>
+              </li>
+            </Link>
+          ) : null}
           <Link to="/admin/products" style={{ textDecoration: "none" }}>
             <li>
               <StoreIcon className="icon" />
               <span>Products</span>
             </li>
           </Link>
-          <Link to="/admin/display-transaction" style={{ textDecoration: "none" }}>
-          <li>
-            <CreditCardIcon className="icon" />
-            <span>Transaction</span>
-          </li>
+          <Link
+            to="/admin/display-transaction"
+            style={{ textDecoration: "none" }}
+          >
+            <li>
+              <CreditCardIcon className="icon" />
+              <span>Transaction</span>
+            </li>
           </Link>
           <Link to="/admin/display-report" style={{ textDecoration: "none" }}>
-          <li>
-            <TableRowsIcon className="icon" />
-            <span>Report</span>
-          </li>
+            <li>
+              <TableRowsIcon className="icon" />
+              <span>Report</span>
+            </li>
           </Link>
         </ul>
       </div>
