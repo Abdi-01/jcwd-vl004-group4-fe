@@ -37,8 +37,11 @@ const History = () => {
               ) : null}
             </div>
           </Card.Header>
-          <Card.Header>
-            Date: {val.createdAt.slice(0, val.createdAt.length - 14)}
+          <Card.Header className="d-flex flex-row justify-content-between">
+            <div className="kiri">
+              Date: {val.createdAt.slice(0, val.createdAt.length - 14)}
+            </div>
+            <div className="kanan">Time: {val.createdAt.slice(11, 16)}</div>
           </Card.Header>
           <Card.Body>
             <Table striped bordered>
