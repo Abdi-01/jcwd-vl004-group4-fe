@@ -5,8 +5,8 @@ import ProductDetail from "../components/ProductDetail";
 import Slider from "../components/Slider";
 import styled from "styled-components";
 import Axios from "axios";
-import { API_URL } from "../constants/API";
-import { useSelector, dispatch, useDispatch } from "react-redux";
+import { API_URL } from '../constants/API'
+import { useSelector, useDispatch } from "react-redux";
 
 const ContainerProduct = styled.div`
   padding: 20px;

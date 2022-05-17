@@ -1,0 +1,32 @@
+
+.inner-container {
+    margin: auto;
+    width: 1200px;
+}
+
+.form-container {
+    margin-top: 80px;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 3px;
+}
+
+.detail-header {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    align-items: center;
+    height: 150px;
+    margin-bottom: 20px;
+}
+
+.img-container {
+    background-color: red;
+    height: 150px;
+    margin: auto;
+}

@@ -15,6 +15,7 @@ const Checkout = () => {
     const navigate = useNavigate()
 
     const [checkoutItems, setCheckoutItems] = useState([])
+    const [address, setAddress] = useState([])
 
     const [totalPrice, setTotalPrice] = useState(0)
 
@@ -28,6 +29,23 @@ const Checkout = () => {
     const user = useSelector(state => state.authUserLogin)
     console.log(user)
 
+    const addAdressHandler = () => {
+        swal({
+            title: "Add new address?",
+            text: "You will be redirected to profile page!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    navigate(`/profile/${userId}`)
+                } else {
+                    swal("You can continue your checkout");
+                }
+            });
+    }
+
     useEffect(() => {
         setCheckoutItems(JSON.parse(localStorage.getItem('checkoutItems')))
         console.log(checkoutItems)
@@ -38,6 +56,15 @@ const Checkout = () => {
         })
         setTotalPrice(subTotal)
 
+    }, [userId])
+
+    useEffect(() => {
+        axios.get(`${API_URL}/users/get-address-byUserId/${userId}`)
+            .then(response => {
+                console.log(response.data)
+                setAddress(response.data)
+            })
+            .catch(err => console.log(err.message))
     }, [userId])
 
     useEffect(() => {
@@ -101,74 +128,26 @@ const Checkout = () => {
                             <div className="details__column">
                                 <h3 className="detail-full details__header">Billing Address</h3>
 
-                                {/* <div className="form-item detail-full">
-                                    <label for="fname"><i className="fa fa-user"></i> Full Name</label>
-                                    <input
-                                        type="text"
-                                        id="fname"
-                                        name="firstname"
-                                        placeholder="John M. Doe"
-                                        required
-                                    />
-                                </div> */}
-
-                                {/* try name db */}
                                 <div className="form-item detail-full">
                                     <label for="fname"><i className="fa fa-user"></i> Full Name</label>
                                     <h4>{user.name}</h4>
                                 </div>
 
-                                {/* <div className="form-item detail-full">
-                                    <label for="email"><i className="fa fa-envelope"></i> Email</label>
-                                    <input
-                                        type="text"
-                                        id="email"
-                                        name="email"
-                                        placeholder="john@example.com"
-                                        required
-                                    />
-                                </div> */}
-
-                                {/* try email db */}
                                 <div className="form-item detail-full">
                                     <label for="email"><i className="fa fa-envelope"></i> Email</label>
                                     <h4>{user.email}</h4>
                                 </div>
 
-                                <div className="form-item detail-full">
-                                    <label for="adr"
-                                    ><i className="fa fa-address-card-o"></i> Address</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="adr"
-                                        name="address"
-                                        placeholder="542 W. 15th Street"
-                                        required
-                                    />
-                                </div>
-
-                                {/* try address db */}
                                 <div className="form-item detail-full" >
-                                    <label htmlFor="address">Choose address</label>
-                                    <select name="address" id="address">
-                                        <option value="">Jakarta</option>
+                                    <label htmlFor="address" style={{ marginBottom: '10px' }} >Choose Address</label>
+                                    <select name="address" id="address" style={{ borderRadius: '5px', border: "solid black 3px" }}>
+                                        <option value="" disabled selected>Choose your address</option>
+                                        {address.map(item => (
+                                            <option key={item.id} value={item}>{`${item.street}, ${item.district}, ${item.city}, ${item.province} ${item.postal_code} `}</option>
+                                        ))}
                                     </select>
-                                </div>
-
-                                <div className="form-item detail-full">
-                                    <label for="city"><i className="fa fa-institution"></i> City</label>
-                                    <input type="text" id="city" name="city" placeholder="New York" required />
-                                </div>
-
-                                <div className="form-item detail-half-1">
-                                    <label for="state">State</label>
-                                    <input type="text" id="state" name="state" placeholder="NY" required />
-                                </div>
-
-                                <div className="form-item detail-half-2">
-                                    <label for="zip">Zip</label>
-                                    <input type="text" id="zip" name="zip" placeholder="10001" required />
+                                    <label htmlFor="address" style={{ marginTop: '20px' }} >Or add new address from profile (if you don't have one)</label>
+                                    <button className="detail-full detail__submit" onClick={addAdressHandler} >Add new address!</button>
                                 </div>
 
                                 <h3 className="detail-full details__header">Payment</h3>
@@ -222,13 +201,6 @@ const Checkout = () => {
                                     <input type="text" id="cvv" name="cvv" placeholder="352" required />
                                 </div>
 
-                                {/* <div className="flex">
-                                    <label htmlFor="payment">Payment Proof right here!</label>
-                                    <input type="file" id="file" accept=".jpg" required onChange={event => {
-                                        const file = event.target.files[0]
-                                        setPaymentImg(file)
-                                    }} />
-                                </div> */}
                                 <button className="detail-full detail__submit" type="submit">Create Checkout!</button>
                             </div>
                         </form>
@@ -259,7 +231,7 @@ const Checkout = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             <Footer />
         </>
     );

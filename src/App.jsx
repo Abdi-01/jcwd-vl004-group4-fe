@@ -31,6 +31,9 @@ import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
 import { FilterReport } from "./pages/FilterReport";
 import DisplayTransaction from "./pages/DisplayTransaction";
+import AddProduct from "./components/admin/products/AddProduct";
+import DetailProduct from "./components/admin/products/DetailProduct";
+import EditProduct from "./components/admin/products/EditProduct";
 import RegisterAdmin from "./pages/admin/register/RegisterAdmin";
 
 const App = () => {
@@ -141,6 +144,9 @@ const App = () => {
 
           <Route element={<List />} path="/admin/users" />
           <Route element={<ProductAdmin />} path="/admin/products" />
+          <Route element={<AddProduct />} path="/admin/add-product" />
+          <Route element={<DetailProduct />} path="/admin/product-detail/:id" />
+          <Route element={<EditProduct />} path="/admin/product-edit/:id" />
         </Routes>
       </BrowserRouter>
     </MuiPickersUtilsProvider>
