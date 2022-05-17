@@ -31,6 +31,9 @@ import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
 import { FilterReport } from "./pages/FilterReport";
 import DisplayTransaction from "./pages/DisplayTransaction";
+import AddProduct from "./components/admin/products/AddProduct";
+import DetailProduct from "./components/admin/products/DetailProduct";
+import EditProduct from "./components/admin/products/EditProduct";
 
 const App = () => {
   const [user, setUser] = useState();
@@ -93,19 +96,19 @@ const App = () => {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    <BrowserRouter>
-      <MyNavbar />
-      <Routes>
-        <Route element={<Home />} path="/" />
-        <Route element={<Register />} path="/register" />
-        <Route element={<Verification />} path="/verification/:token" />
-        <Route element={<Login />} path="/login" />
-        <Route element={<ForgetPassword />} path="/forget-password" />
-        <Route element={<ResetPassword />} path="/reset-password/:token" />
-        <Route element={<Profile />} path="/profile/:userId" />
-        <Route element={<Cart />} path="/cart" />
-        <Route element={<Checkout />} path="/checkout" />
-        <Route element={<Payment />} path="/payment" />
+      <BrowserRouter>
+        <MyNavbar />
+        <Routes>
+          <Route element={<Home />} path="/" />
+          <Route element={<Register />} path="/register" />
+          <Route element={<Verification />} path="/verification/:token" />
+          <Route element={<Login />} path="/login" />
+          <Route element={<ForgetPassword />} path="/forget-password" />
+          <Route element={<ResetPassword />} path="/reset-password/:token" />
+          <Route element={<Profile />} path="/profile/:userId" />
+          <Route element={<Cart />} path="/cart" />
+          <Route element={<Checkout />} path="/checkout" />
+          <Route element={<Payment />} path="/payment" />
 
           <Route element={<ProductList />} path="/product-list" />
 
@@ -133,6 +136,9 @@ const App = () => {
 
           <Route element={<List />} path="/admin/users" />
           <Route element={<ProductAdmin />} path="/admin/products" />
+          <Route element={<AddProduct />} path="/admin/add-product" />
+          <Route element={<DetailProduct />} path="/admin/product-detail/:id" />
+          <Route element={<EditProduct />} path="/admin/product-edit/:id" />
         </Routes>
       </BrowserRouter>
     </MuiPickersUtilsProvider>
