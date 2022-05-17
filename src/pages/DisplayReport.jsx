@@ -6,16 +6,32 @@ import { useSearchParams } from "react-router-dom";
 import { Container, Stack, Pagination } from "@mui/material";
 import swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Sidebar from "../components/admin/sidebar/Sidebar";
 
 const DisplayReport = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   let [invoices, setInvoices] = useState([]);
   let [page, setPage] = useState(1);
   const admin = useSelector((state) => state.authAdminLogin);
+  const navigate = useNavigate();
 
   let fetchInvoices = async () => {
-    if (!admin.id) return;
+    if (!admin.id) {
+      console.log("null admin");
+      swal
+        .fire({
+          title: "You don't have access to this page",
+          icon: "warning",
+          confirm: true,
+        })
+        .then(() => {
+          navigate("/");
+        });
+      return;
+    }
+
     try {
       let res = await Axios.get(`${API_URL}/report/get-display-report`, {
         params: {
@@ -54,19 +70,38 @@ const DisplayReport = () => {
     fetchInvoices();
   }, [searchParams, admin]);
 
+  
+
   return (
-    <Container style={{ marginTop: "60px" }}>
-      <CollapsibleTable rows={invoices}></CollapsibleTable>
-      <Stack direction="row" justifyContent="center" spacing={2}>
-        <Pagination
-          count={page}
-          variant="outlined"
-          siblingCount={1}
-          shape="rounded"
-          onChange={(ev, page) => paginationHandler(page)}
-        />
-      </Stack>
-    </Container>
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+      }}
+    >
+      <Sidebar />
+      <div
+        classNameName="container"
+        style={{
+          marginTop: "60px",
+          display: admin.id ? "block" : "none",
+          flex: 6,
+        }}
+      >
+        {/* <Container style={{ marginTop: "60px" }}> */}
+          <CollapsibleTable rows={invoices}></CollapsibleTable>
+          <Stack direction="row" justifyContent="center" spacing={2}>
+            <Pagination
+              count={page}
+              variant="outlined"
+              siblingCount={1}
+              shape="rounded"
+              onChange={(ev, page) => paginationHandler(page)}
+            />
+          </Stack>
+        {/* </Container> */}
+      </div>
+    </div>
   );
 };
 

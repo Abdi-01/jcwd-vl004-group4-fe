@@ -11,11 +11,11 @@ import {
 } from "victory";
 
 export const ProfitChart = (props) => {
-  console.log(props)
+  console.log(props);
 
   let [data, setData] = useState([]);
 
-  let fetchProfit= async () => {
+  let fetchProfit = async () => {
     try {
       let res = await Axios.get(
         "http://localhost:5000/report/get-profit-chart",
@@ -45,7 +45,6 @@ export const ProfitChart = (props) => {
   }, [props]);
 
   return (
-
     <div>
       <VictoryChart
         scale={{ x: "time" }}

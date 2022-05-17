@@ -9,6 +9,8 @@ import "sweetalert2/src/sweetalert2.scss";
 import { useSelector } from "react-redux";
 import { DatePicker } from "@material-ui/pickers";
 import { addDays } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/admin/sidebar/Sidebar";
 
 const DisplayTransaction = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -17,11 +19,23 @@ const DisplayTransaction = () => {
   const admin = useSelector((state) => state.authAdminLogin);
   const [startDate, setStartDate] = useState(addDays(new Date(), -30));
   const [endDate, setEndDate] = useState(new Date());
-
-  console.log(admin);
+  const navigate = useNavigate();
 
   let fetchInvoices = async () => {
-    if (!admin.id) return;
+    if (!admin.id) {
+      console.log("null admin");
+      swal
+        .fire({
+          title: "You don't have access to this page",
+          icon: "warning",
+          confirm: true,
+        })
+        .then(() => {
+          navigate("/");
+        });
+      return;
+    }
+
     try {
       console.log(startDate, endDate);
       let res = await Axios.get(
@@ -76,48 +90,67 @@ const DisplayTransaction = () => {
   }, [searchParams, admin, startDate, endDate]);
 
   return (
-    <Container style={{ marginTop: "60px" }}>
-      <div className="tabcontent">
-        <span style={{ color: "#0e4c95", fontWeight: "bold" }}>
-          Select Dates:
-        </span>
-        <DatePicker
-          style={{ marginLeft: "20px" }}
-          disableFuture
-          openTo="year"
-          format="yyyy-MM-dd"
-          label="Start Date"
-          views={["year", "month", "date"]}
-          value={startDate}
-          onChange={startDateHandler}
-        />
-        <DatePicker
-          style={{ marginLeft: "20px" }}
-          disableFuture
-          openTo="year"
-          format="yyyy-MM-dd"
-          label="End Date"
-          views={["year", "month", "date"]}
-          value={endDate}
-          onChange={endDateHandler}
-        />
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+      }}
+    >
+      <Sidebar />
+      <div
+        classNameName="container"
+        style={{
+          marginTop: "70px",
+          display: admin.id ? "block" : "none",
+          flex: 6,
+        }}
+      >
+        {/* <Container style={{ marginTop: "60px" }}> */}
+        <div className="tabcontent">
+          <span
+            style={{ color: "#0e4c95", fontWeight: "bold", marginLeft: "10px" }}
+          >
+            Select Dates:
+          </span>
+          <DatePicker
+            style={{ marginLeft: "20px", marginBottom: "20px" }}
+            disableFuture
+            openTo="year"
+            format="yyyy-MM-dd"
+            label="Start Date"
+            views={["year", "month", "date"]}
+            value={startDate}
+            onChange={startDateHandler}
+          />
+          <DatePicker
+            style={{ marginLeft: "20px" }}
+            disableFuture
+            openTo="year"
+            format="yyyy-MM-dd"
+            label="End Date"
+            views={["year", "month", "date"]}
+            value={endDate}
+            onChange={endDateHandler}
+          />
+        </div>
+
+        <CollapsibleTable
+          rows={invoices}
+          refreshData={fetchInvoices}
+        ></CollapsibleTable>
+
+        <Stack direction="row" justifyContent="center" spacing={2}>
+          <Pagination
+            count={page}
+            variant="outlined"
+            siblingCount={1}
+            shape="rounded"
+            onChange={(ev, page) => paginationHandler(page)}
+          />
+        </Stack>
+        {/* </Container> */}
       </div>
-
-      <CollapsibleTable
-        rows={invoices}
-        refreshData={fetchInvoices}
-      ></CollapsibleTable>
-
-      <Stack direction="row" justifyContent="center" spacing={2}>
-        <Pagination
-          count={page}
-          variant="outlined"
-          siblingCount={1}
-          shape="rounded"
-          onChange={(ev, page) => paginationHandler(page)}
-        />
-      </Stack>
-    </Container>
+    </div>
   );
 };
 

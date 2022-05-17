@@ -75,10 +75,7 @@ const AdminLogin = (props) => {
       // console.log(values);
       Axios.post(`${API_URL}/admin/login`, values)
         .then((res) => {
-          localStorage.setItem(
-            "token_shutter_admin",
-            JSON.stringify(res.data.token)
-          );
+          localStorage.setItem("token_shutter_admin", res.data.token);
           dispatch({
             type: "ADMIN_LOGIN_SUCCESS",
             payload: res.data.dataLogin,

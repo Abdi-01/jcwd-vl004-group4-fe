@@ -52,7 +52,7 @@ const MyNavbar = (props) => {
           <Nav.Link as={Link} to="/product-list">
             Products
           </Nav.Link>
-          <Nav.Link as={Link} to="/">
+          <Nav.Link as={Link} to="/about-us">
             About Us
           </Nav.Link>
         </Nav>

@@ -28,13 +28,15 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminForgetPassword from "./pages/admin/AdminForgetPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
-import { FilterReport } from "./pages/FilterReport";
+import FilterReport from "./pages/FilterReport";
 import DisplayTransaction from "./pages/DisplayTransaction";
+import AboutUs from "./pages/AboutUs";
 
 const App = () => {
   const [user, setUser] = useState();
   const [admin, setAdmin] = useState();
   const dispatch = useDispatch();
+  let [tokenChecked, setTokenChecked] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
@@ -57,53 +59,60 @@ const App = () => {
               type: "USER_LOGIN_SUCCESS",
               payload: res.data.dataLogin,
             });
+            setTokenChecked(true);
           })
           .catch((err) => {
             console.log(err);
+            setTokenChecked(true);
           });
       }
     } else if (localStorage.getItem("token_shutter_admin")) {
       const loggedInAdmin = localStorage.getItem("token_shutter_admin");
-      const foundAdmin = JSON.parse(loggedInAdmin);
-      setAdmin(foundAdmin);
+      // setAdmin(foundAdmin);
+      // console.log(loggedInAdmin, foundAdmin);
 
       if (loggedInAdmin) {
         Axios.post(
           `${API_URL}/admin/keep-login`,
           {},
-          { headers: { Authorization: `Bearer ${admin}` } }
+          { headers: { Authorization: `Bearer ${loggedInAdmin}` } }
         )
           .then((res) => {
-            localStorage.setItem(
-              "token_shutter_admin",
-              JSON.stringify(res.data.token)
-            );
+            localStorage.setItem("token_shutter_admin", res.data.token);
             dispatch({
               type: "ADMIN_LOGIN_SUCCESS",
               payload: res.data.dataLogin,
             });
+            console.log("admin logged in");
+            setTokenChecked(true);
           })
           .catch((err) => {
             console.log(err);
+            setTokenChecked(true);
           });
       }
+    } else {
+      setTokenChecked(true);
     }
-  }, [user, admin, dispatch]);
+  }, []);
+
+  if (!tokenChecked) return <></>;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    <BrowserRouter>
-      <MyNavbar />
-      <Routes>
-        <Route element={<Home />} path="/" />
-        <Route element={<Register />} path="/register" />
-        <Route element={<Verification />} path="/verification/:token" />
-        <Route element={<Login />} path="/login" />
-        <Route element={<ForgetPassword />} path="/forget-password" />
-        <Route element={<ResetPassword />} path="/reset-password/:token" />
-        <Route element={<Profile />} path="/profile/:userId" />
-        <Route element={<Cart />} path="/cart" />
-        <Route element={<Checkout />} path="/checkout" />
+      <BrowserRouter>
+        <MyNavbar />
+
+        <Routes>
+          <Route element={<Home />} path="/" />
+          <Route element={<Register />} path="/register" />
+          <Route element={<Verification />} path="/verification/:token" />
+          <Route element={<Login />} path="/login" />
+          <Route element={<ForgetPassword />} path="/forget-password" />
+          <Route element={<ResetPassword />} path="/reset-password/:token" />
+          <Route element={<Profile />} path="/profile/:userId" />
+          <Route element={<Cart />} path="/cart" />
+          <Route element={<Checkout />} path="/checkout" />
 
           <Route element={<ProductList />} path="/product-list" />
 
@@ -111,7 +120,7 @@ const App = () => {
             element={<ProductDetail />}
             path="/product-detail/:productId"
           />
-
+          <Route element={<AboutUs />} path="/about-us" />
           <Route
             element={<DisplayTransaction />}
             path="/admin/display-transaction"

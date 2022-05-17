@@ -21,6 +21,7 @@ const Left = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+  margin-left: 30px;
 `;
 
 const Logo = styled.h1``;
@@ -48,6 +49,7 @@ const SocialIcon = styled.div`
 const Center = styled.div`
   flex: 1;
   padding: 20px;
+  margin-left: 30px;
   ${mobile({ display: "none" })}
 `;
 
@@ -122,7 +124,7 @@ const Footer = () => {
           <ListItem as={Link} to="">Account</ListItem>
           <ListItem as={Link} to="/product-list">Products</ListItem>
           <ListItem as={Link} to="">Wishlist</ListItem>
-          <ListItem>About Us</ListItem>
+          <ListItem as={Link} to="/about-us">About Us</ListItem>
           <ListItem as={Link} to="/cart">Cart</ListItem>
         </List>
       </Center>

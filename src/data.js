@@ -1,9 +1,10 @@
 export const sliderItems = [
   {
     id: 1,
-    img: "https://sobeyspharmacy.com/wp-content/uploads/2016/02/PharmacyTeam_4people-sm-1-1024x661.png",
+    // img: "https://sobeyspharmacy.com/wp-content/uploads/2016/02/PharmacyTeam_4people-sm-1-1024x661.png",
+    img: "https://nibd.edu.pk/wp-content/uploads/2016/10/slider-3.png",
     title: "Pharmacy-App-4",
-    desc: "Globally Present to Make People Live a Healthier and Meaningful Life",
+    desc: "Globally Present to Contribute to Your Health and Healthy Living with Products Ranging from All Segments.",
     bg: "7dc4f4",
   },
   {

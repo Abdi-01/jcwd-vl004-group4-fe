@@ -29,40 +29,61 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" align="center">
           {row.invoice_code}
         </TableCell>
-        <TableCell align="right">{row.shipping_price}</TableCell>
-        <TableCell align="right">{row.total_price}</TableCell>
-        <TableCell align="right">{row.createdAt}</TableCell>
-        <TableCell align="right">{row.user.username}</TableCell>
-        <TableCell align="right">{row.admin.username}</TableCell>
+        <TableCell align="center">
+          {row.shipping_price.toLocaleString("id-ID")}
+        </TableCell>
+        <TableCell align="center">
+          {row.total_price.toLocaleString("id-ID")}
+        </TableCell>
+        <TableCell align="center">{row.createdAt}</TableCell>
+        <TableCell align="center">{row.user.username}</TableCell>
+        <TableCell align="center">{row.admin.username}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography
+                variant="h6"
+                gutterBottom
+                component="div"
+                className="fw-bold"
+              >
                 Details
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Bottle Capacity</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Price</TableCell>
+                    <TableCell />
+                    <TableCell align="center" className="fw-bold">Product Name</TableCell>
+                    <TableCell align="center" className="fw-bold">
+                      Bottle Capacity
+                    </TableCell>
+                    <TableCell align="center" className="fw-bold">
+                      Quantity
+                    </TableCell>
+                    <TableCell align="center" className="fw-bold">
+                      Price
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.invoice_details.map((dtls) => (
                     <TableRow key={dtls.id}>
-                      <TableCell component="th" scope="row">
+                      <TableCell />
+                      <TableCell align="center" component="th" scope="row">
                         {dtls.product.name}
                       </TableCell>
-                      <TableCell>{dtls.product.bottle_capacity}</TableCell>
-                      <TableCell align="right">{dtls.qty}</TableCell>
-                      <TableCell align="right">{dtls.price}</TableCell>
+                      <TableCell align="center">
+                        {dtls.product.bottle_capacity}
+                      </TableCell>
+                      <TableCell align="center">{dtls.qty}</TableCell>
+                      <TableCell align="center">
+                        {dtls.price.toLocaleString("id-ID")}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -85,12 +106,24 @@ export default function CollapsibleTable(props) {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell align="left">Invoice Code</TableCell>
-            <TableCell align="right">Shipping Price</TableCell>
-            <TableCell align="right">Total Price</TableCell>
-            <TableCell align="right">Created Date</TableCell>
-            <TableCell align="right">User</TableCell>
-            <TableCell align="right">Admin</TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              Invoice Code
+            </TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              Shipping Price
+            </TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              Total Price
+            </TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              Created Date
+            </TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              User
+            </TableCell>
+            <TableCell align="center" className="fs-6 fw-bold">
+              Admin
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

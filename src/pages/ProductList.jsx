@@ -58,7 +58,7 @@ const ProductList = () => {
   console.log(searchParams);
   const [products, setProducts] = useState([]);
   let [page, setPage] = useState(1);
-  const [bestSeller, setBestSeller] = useState([]);
+  // const [bestSeller, setBestSeller] = useState([]);
 
   useEffect(() => {
     getProductsData();
@@ -90,20 +90,20 @@ const ProductList = () => {
     }
   };
 
-  const getBestSellerData = async () => {
-    try {
-      const res = await Axios.get(`${API_URL}/products/get-best-seller`);
-      setBestSeller(res.data.bestSeller);
-    } catch (err) {
-      console.log(err);
-      swal.fire({
-        title: "There is some mistake in server",
-        icon: "warning",
-        confirm: true,
-      });
-      return;
-    }
-  };
+  // const getBestSellerData = async () => {
+  //   try {
+  //     const res = await Axios.get(`${API_URL}/products/get-best-seller`);
+  //     setBestSeller(res.data.bestSeller);
+  //   } catch (err) {
+  //     console.log(err);
+  //     swal.fire({
+  //       title: "There is some mistake in server",
+  //       icon: "warning",
+  //       confirm: true,
+  //     });
+  //     return;
+  //   }
+  // };
 
   let paginationHandler = (page) => {
     console.log(page);
