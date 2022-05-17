@@ -18,19 +18,27 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 170vh;
   background-color: #e4e0d3;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: center;
 `;
 
-const Top = styled.div`
+const Left = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-top: 70px;
+`;
+const Right = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
 `;
 
 const Profile = () => {
@@ -96,31 +104,51 @@ const Profile = () => {
 
   const params = useParams();
 
-  const fetchUser = () => {
-    Axios.get(`${API_URL}/users/get-user-byId/${params.userId}`)
-      .then((res) => {
-        setUser(res.data);
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+  // const fetchUser = () => {
+  //   Axios.get(`${API_URL}/users/get-user-byId/${params.userId}`)
+  //     .then((res) => {
+  //       setUser(res.data);
+  //       // console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
 
-  const fetchAddresses = () => {
-    Axios.get(`${API_URL}/users/get-address-byUserId/${params.userId}`)
-      .then((res) => {
-        setUserAddress(res.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+  // const fetchAddresses = () => {
+  //   Axios.get(`${API_URL}/users/get-address-byUserId/${params.userId}`)
+  //     .then((res) => {
+  //       setUserAddress(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
 
   useEffect(() => {
+    const fetchUser = () => {
+      Axios.get(`${API_URL}/users/get-user-byId/${params.userId}`)
+        .then((res) => {
+          setUser(res.data);
+          // console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    };
     fetchUser();
+
+    const fetchAddresses = () => {
+      Axios.get(`${API_URL}/users/get-address-byUserId/${params.userId}`)
+        .then((res) => {
+          setUserAddress(res.data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    };
     fetchAddresses();
-  }, []);
+  }, [params.userId]);
   // console.log("user:", user);
   // console.log(userAddress);
 
@@ -166,7 +194,7 @@ const Profile = () => {
         .then((res) => {
           handleUsernameClose();
           setUser(res.data.user);
-          console.log(res.data.user);
+          // console.log(res.data.user);
           Swal.fire({
             text: res.data.message,
             icon: "success",
@@ -190,7 +218,7 @@ const Profile = () => {
       Axios.post(`${API_URL}/users/check-password/${params.userId}`, values)
         .then((res) => {
           console.log(res.data.success);
-          setShowEditPassword(true);
+          handleEditPasswordOpen();
           setShowCheckPassword(false);
         })
         .catch((err) => {
@@ -354,6 +382,8 @@ const Profile = () => {
     },
   });
 
+  console.log(newUserAddress);
+
   const deleteAddressBtn = (addressId) => {
     setIdxAddress(addressId);
     const id = userAddress[addressId].id;
@@ -390,7 +420,7 @@ const Profile = () => {
   } else {
     return (
       <Container>
-        <Top>
+        <Left>
           <Card style={{ height: "480px", width: "350px" }}>
             <Card.Body className="d-flex flex-column justify-content-around">
               <h3>Profile</h3>
@@ -771,38 +801,35 @@ const Profile = () => {
                       <ul>
                         {userAddress.length > 0 ? (
                           userAddress.map((item, index) => {
-                            if (index >= 0) {
-                              return (
-                                <li key={index}>
-                                  <div className="d-flex flex-row justify-content-between my-2">
-                                    <div className="isi">
-                                      {item.street}, {item.district},{" "}
-                                      {item.city}, {item.province},{" "}
-                                      {item.postal_code}{" "}
-                                    </div>
-                                    <div className="pencet">
-                                      <EditIcon
-                                        onClick={() =>
-                                          handleEditAddressOpen(index)
-                                        }
-                                        style={{
-                                          cursor: "pointer",
-                                          color: "#273f87",
-                                        }}
-                                      />
-                                      <DeleteIcon
-                                        onClick={() => deleteAddressBtn(index)}
-                                        style={{
-                                          cursor: "pointer",
-                                          color: "#b25555",
-                                          marginLeft: "5px",
-                                        }}
-                                      />
-                                    </div>
+                            return (
+                              <li key={index}>
+                                <div className="d-flex flex-row justify-content-between my-2">
+                                  <div className="isi">
+                                    {item.street}, {item.district}, {item.city},{" "}
+                                    {item.province}, {item.postal_code}{" "}
                                   </div>
-                                </li>
-                              );
-                            }
+                                  <div className="pencet">
+                                    <EditIcon
+                                      onClick={() =>
+                                        handleEditAddressOpen(index)
+                                      }
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#273f87",
+                                      }}
+                                    />
+                                    <DeleteIcon
+                                      onClick={() => deleteAddressBtn(index)}
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#b25555",
+                                        marginLeft: "5px",
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              </li>
+                            );
                           })
                         ) : (
                           <CircularProgress />
@@ -1047,13 +1074,15 @@ const Profile = () => {
               </Row>
             </Card.Body>
           </Card>
-          <Card className="ms-3" style={{ height: "480px", width: "870px" }}>
-            <Card.Body>
-              <h3>Transaction History</h3>
-              <History />
+        </Left>
+        <Right>
+          <Card style={{ width: "600px" }} className="ms-2 mb-2">
+            <Card.Body className="text-center">
+              <h4>Transaction History</h4>
             </Card.Body>
           </Card>
-        </Top>
+          <History />
+        </Right>
       </Container>
     );
   }
