@@ -9,7 +9,7 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -98,9 +98,9 @@ const Footer = () => {
   return (
     <Container>
       <Left>
-        <Logo>Pharmacy-App-4</Logo>
+        <Logo>Pharmadika</Logo>
         <Desc>
-        Pharmacy-App-4 is a pharmaceutical company that has been the trusted choice for over 24 years. Pharmacy-App-4 gives the best health products option and offers quality.
+          Pharmadika is a pharmaceutical company that has been the trusted choice for over 24 years. Pharmadika gives the best health products option and offers quality.
         </Desc>
         <SocialContainer>
           <SocialIcon color="3B5999">
@@ -131,13 +131,13 @@ const Footer = () => {
       <Right>
         <Title>Contact</Title>
         <ContactItem>
-          <Room style={{marginRight:"10px"}}/> 622 Dixie Path , South Tobinchester 98336
+          <Room style={{ marginRight: "10px" }} /> 622 Dixie Path , South Tobinchester 98336
         </ContactItem>
         <ContactItem>
-          <Phone style={{marginRight:"10px"}}/> +1 234 56 78
+          <Phone style={{ marginRight: "10px" }} /> +1 234 56 78
         </ContactItem>
         <ContactItem>
-          <MailOutline style={{marginRight:"10px"}} /> contact@pharmacy-app-4.com
+          <MailOutline style={{ marginRight: "10px" }} /> contact@Pharmadika.com
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>
