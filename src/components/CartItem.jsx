@@ -78,7 +78,7 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
 
     let [input, setInput] = useState(item.qty)
     const dispatch = useDispatch()
-    // console.log(item)
+    const description = item.product.description.slice(0, 140)
 
     const userId = useSelector(state => state.authUserLogin.id)
     const stockReady = item.product.stock
@@ -157,7 +157,8 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
                             </ProductName>
                             <br />
                             <ProductSize>
-                                <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                {/* <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad */}
+                                <b>Description:</b> {description} . . .
                             </ProductSize>
                         </Details>
                     </ProductDetail>

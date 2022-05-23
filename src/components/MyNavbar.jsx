@@ -40,7 +40,7 @@ const MyNavbar = (props) => {
     >
       <div className="nav-left ms-5">
         <Navbar.Brand as={Link} to="/">
-          Pharmacy-App-4
+          Pharmadika
         </Navbar.Brand>
       </div>
       <div className="nav-center">
