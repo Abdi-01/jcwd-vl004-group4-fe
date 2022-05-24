@@ -186,7 +186,7 @@ const ProductList = () => {
             <Option value="Price (DESC)">Price (DESC)</Option>
             <Option value="Name (ASC)">A - Z</Option>
             <Option value="Name (DESC)">Z - A</Option>
-            <Option value="Best Seller">Best Seller</Option>
+            {/* <Option value="Best Seller">Best Seller</Option> */}
           </Select>
         </Filter>
         <Filter>
