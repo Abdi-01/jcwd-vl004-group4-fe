@@ -72,8 +72,8 @@ const History = () => {
                       </td>
                       <td>{item.product.name}</td>
                       <td>{item.qty}</td>
-                      <td>{item.price}</td>
-                      <td>{item.qty * item.price}</td>
+                      <td>{item.price.toLocaleString("id-ID")}</td>
+                      <td>{(item.qty * item.price).toLocaleString("id-ID")}</td>
                     </tr>
                   );
                 })}
@@ -81,8 +81,12 @@ const History = () => {
             </Table>
           </Card.Body>
           <Card.Footer className="d-flex flex-row justify-content-around">
-            <Row>Shipping Price: {data[0].shipping_price.toLocaleString()}</Row>
-            <Row>Sub Total: {data[index].total_price.toLocaleString()}</Row>
+            <Row>
+              Shipping Price: {data[0].shipping_price.toLocaleString("id-ID")}
+            </Row>
+            <Row>
+              Sub Total: {data[index].total_price.toLocaleString("id-ID")}
+            </Row>
           </Card.Footer>
         </Card>
       );
