@@ -113,7 +113,7 @@ const AdminLogin = () => {
           clearInterval(timerInterval);
         },
       }).then(() => {
-        navigate("/admin/users");
+        navigate("/admin/filter-report");
       });
     }
   };
