@@ -16,7 +16,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MyNavbar from "./components/MyNavbar";
 
 import List from "./pages/admin/list/List";
-import Admin from "./pages/Admin";
 import ProductAdmin from "./components/admin/products/Product";
 import AdminLogin from "./pages/admin/AdminLogin";
 import Verification from "./pages/Verification";
@@ -123,17 +122,6 @@ const App = () => {
           />
           <Route element={<DisplayReport />} path="/admin/display-report" />
           <Route element={<FilterReport />} path="/admin/filter-report" />
-          <Route element={<Admin />} path="/admin" />
-          <Route element={<AdminLogin />} path="/admin/login" />
-          <Route
-            element={<AdminForgetPassword />}
-            path="/admin/forget-password"
-          />
-          <Route
-            element={<AdminResetPassword />}
-            path="/admin/reset-password/:token"
-          />
-          <Route element={<Admin />} path="/admin" />
           <Route element={<AdminLogin />} path="/admin/login" />
           <Route
             element={<AdminForgetPassword />}
