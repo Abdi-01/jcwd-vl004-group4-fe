@@ -69,7 +69,7 @@ const Cart = () => {
         .catch(err => console.log(err))
     }
     fetchCartItems()
-  }, [userId])
+  }, [userId, totalItems])
 
 
   return (

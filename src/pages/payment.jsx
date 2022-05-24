@@ -44,6 +44,7 @@ const Payment = () => {
                     payload: 0
                 })
                 navigate('/')
+                localStorage.removeItem('checkoutItems')
             })
             .catch(error => console.log(error.message))
     }
@@ -64,6 +65,7 @@ const Payment = () => {
                                 icon: "success",
                             });
                             navigate('/')
+                            localStorage.removeItem('checkoutItems')
                         } else {
                             swal("Your checkout is safe!");
                         }
