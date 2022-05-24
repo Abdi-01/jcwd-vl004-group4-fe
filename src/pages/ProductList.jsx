@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ProductDetail from "../components/ProductDetail";
 import Products from "../components/Products";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
@@ -13,13 +12,6 @@ import Stack from "@mui/material/Stack";
 import { useSearchParams } from "react-router-dom";
 
 const Container = styled.div``;
-
-const ContainerProduct = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
 
 const Title = styled.h1`
   margin: 20px;
@@ -205,11 +197,7 @@ const ProductList = () => {
           ></Input>
         </Filter>
       </FilterContainer>
-      <ContainerProduct>
-        {products.map((product) => (
-          <ProductDetail product={product} key={product.id} />
-        ))}
-      </ContainerProduct>
+      <Products products={products}/>
       <Stack direction="row" justifyContent="center" spacing={2}>
         <Pagination
           count={page}

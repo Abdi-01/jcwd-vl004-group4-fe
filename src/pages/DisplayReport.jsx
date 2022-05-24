@@ -18,8 +18,8 @@ const DisplayReport = () => {
   const navigate = useNavigate();
 
   let fetchInvoices = async () => {
-    if (!admin.id) {
-      console.log("null admin");
+    if (!localStorage.getItem("token_shutter_admin")) {
+      console.log("null admin token");
       swal
         .fire({
           title: "You don't have access to this page",
@@ -34,11 +34,16 @@ const DisplayReport = () => {
 
     try {
       let res = await Axios.get(`${API_URL}/report/get-display-report`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("token_shutter_admin"))
+          }`,
+        },
         params: {
           offset: searchParams.get("offset"),
           adminId: admin.id,
         },
-      });
+      })
       console.log(res.data);
       setInvoices(res.data.items);
       setPage(res.data.pageCount);
@@ -81,14 +86,12 @@ const DisplayReport = () => {
     >
       <Sidebar />
       <div
-        classNameName="container"
         style={{
           marginTop: "60px",
           display: admin.id ? "block" : "none",
           flex: 6,
         }}
       >
-        {/* <Container style={{ marginTop: "60px" }}> */}
           <CollapsibleTable rows={invoices}></CollapsibleTable>
           <Stack direction="row" justifyContent="center" spacing={2}>
             <Pagination
@@ -99,7 +102,6 @@ const DisplayReport = () => {
               onChange={(ev, page) => paginationHandler(page)}
             />
           </Stack>
-        {/* </Container> */}
       </div>
     </div>
   );

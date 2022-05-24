@@ -9,7 +9,7 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -121,11 +121,11 @@ const Footer = () => {
         <Title>Useful Links</Title>
         <List>
           <ListItem as={Link} to="/">Home</ListItem>
-          <ListItem as={Link} to="">Account</ListItem>
+          <ListItem as={Link} to="/profile/:userId">Profile</ListItem>
           <ListItem as={Link} to="/product-list">Products</ListItem>
-          <ListItem as={Link} to="">Wishlist</ListItem>
-          <ListItem as={Link} to="/about-us">About Us</ListItem>
           <ListItem as={Link} to="/cart">Cart</ListItem>
+          <ListItem as={Link} to="/about-us">About Us</ListItem>
+          {/* <ListItem as={Link} to="">Wishlist</ListItem> */}
         </List>
       </Center>
       <Right>

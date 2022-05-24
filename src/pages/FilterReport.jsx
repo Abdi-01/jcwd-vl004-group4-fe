@@ -29,8 +29,8 @@ const FilterReport = () => {
   console.log(JSON.stringify(summary));
 
   let fetchSummary = async () => {
-    if (!admin.id) {
-      console.log("null admin");
+    if (!localStorage.getItem("token_shutter_admin")) {
+      console.log("null admin token");
       swal
         .fire({
           title: "You don't have access to this page",
@@ -45,6 +45,11 @@ const FilterReport = () => {
 
     try {
       let res = await Axios.get(`${API_URL}/report/get-filter-report`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("token_shutter_admin"))
+          }`,
+        },
         params: {
           min: startDate,
           max: endDate,
@@ -90,7 +95,6 @@ const FilterReport = () => {
     >
       <Sidebar />
       <div
-        classNameName="container"
         style={{
           marginTop: "70px",
           display: admin.id ? "block" : "none",

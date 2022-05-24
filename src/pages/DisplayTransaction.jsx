@@ -22,8 +22,8 @@ const DisplayTransaction = () => {
   const navigate = useNavigate();
 
   let fetchInvoices = async () => {
-    if (!admin.id) {
-      console.log("null admin");
+    if (!localStorage.getItem("token_shutter_admin")) {
+      console.log("null admin token");
       swal
         .fire({
           title: "You don't have access to this page",
@@ -41,6 +41,11 @@ const DisplayTransaction = () => {
       let res = await Axios.get(
         `${API_URL}/transaction/get-display-transaction`,
         {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token_shutter_admin"))
+            }`,
+          },
           params: {
             offset: searchParams.get("offset"),
             adminId: admin.id,
@@ -98,14 +103,12 @@ const DisplayTransaction = () => {
     >
       <Sidebar />
       <div
-        classNameName="container"
         style={{
           marginTop: "70px",
           display: admin.id ? "block" : "none",
           flex: 6,
         }}
       >
-        {/* <Container style={{ marginTop: "60px" }}> */}
         <div className="tabcontent">
           <span
             style={{ color: "#0e4c95", fontWeight: "bold", marginLeft: "10px" }}
@@ -148,7 +151,6 @@ const DisplayTransaction = () => {
             onChange={(ev, page) => paginationHandler(page)}
           />
         </Stack>
-        {/* </Container> */}
       </div>
     </div>
   );
