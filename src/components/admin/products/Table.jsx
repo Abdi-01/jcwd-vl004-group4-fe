@@ -175,7 +175,7 @@ const Table = () => {
                             <div>
                                 <div style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between', width: '100%', marginTop: '90px' }} >
                                     <div>
-                                        <Link to="/admin" >
+                                        <Link to="/admin/filter-report" >
                                             <Button color='light' size='lg' >
                                                 <ion-icon name="chevron-back-circle-outline" size="large" ></ion-icon>
                                             </Button>

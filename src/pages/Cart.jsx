@@ -17,6 +17,7 @@ const Cart = () => {
   const [cart, setCart] = useState([])
   const [totalPrice, setTotalPrice] = useState(0)
   let [totalItems, setTotalItems] = useState(0)
+  const [courier, setCourier] = useState(false)
 
   const userId = useSelector(state => state.authUserLogin.id)
   const adminId = useSelector(state => state)
@@ -89,12 +90,13 @@ const Cart = () => {
             <span><b>SUBTOTAL : </b>( {totalItems} items )</span>
             <span>Rp.{totalPrice?.toLocaleString()}</span>
           </div>
-          <select name="shipping" className="select" >
+          <select name="shipping" className="select" required onChange={() => setCourier(true)} >
             <option value="" disabled selected >Shipping Options</option>
             <option value="">JNE</option>
             <option value="">TIKI</option>
             <option value="">JNT</option>
           </select>
+          {console.log(courier)}
           <div className={styles.summary__price}>
             <span><b>Estimated Shipping : </b></span>
             <span>Rp.{shippingDummy.toLocaleString()}</span>
@@ -102,10 +104,11 @@ const Cart = () => {
           <hr style={{ borderTop: "3px solid black" }} />
           <div className={styles.summary__price}>
             <span><b>TOTAL : </b></span>
-            <span>Rp.{finalPrice}</span>
+            {cart.length == 0 && <span>Rp.0</span>}
+            {cart.length > 0 && <span>Rp.{finalPrice}</span>}
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: 'center' }} >
-            <Button className="btn btn-info w-100" style={{ fontWeight: "bold" }} onClick={checkoutHandler} disabled={cart.length < 1} >
+            <Button className="btn btn-info w-100" style={{ fontWeight: "bold" }} onClick={checkoutHandler} disabled={cart.length < 1 || !courier} >
               Proceed To Checkout
             </Button>
           </div>

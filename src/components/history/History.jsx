@@ -26,8 +26,8 @@ const History = () => {
           <Card.Header className="d-flex flex-row justify-content-between">
             <div className="kiri">Invoice Code: {val.invoice_code}</div>
             <div className="kanan">
-              {val.status === "paid" ? (
-                <span className="badge bg-success">Approved</span>
+              {val.status === "on process" ? (
+                <span className="badge bg-success">Approved / On Process</span>
               ) : null}
               {val.status === "pending" ? (
                 <span className="badge bg-warning">Pending</span>
