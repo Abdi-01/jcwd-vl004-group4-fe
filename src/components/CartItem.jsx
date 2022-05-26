@@ -158,7 +158,7 @@ const CartItem = ({ item, setCart, setTotalPrice, setTotalItems }) => {
                             <br />
                             <ProductSize>
                                 {/* <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad */}
-                                <b>Description:</b> {description} . . .
+                                {/* <b>Description:</b> {description} . . . */}
                             </ProductSize>
                         </Details>
                     </ProductDetail>

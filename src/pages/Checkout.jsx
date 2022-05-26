@@ -140,7 +140,7 @@ const Checkout = () => {
 
                                 <div className="form-item detail-full" >
                                     <label htmlFor="address" style={{ marginBottom: '10px' }} >Choose Address</label>
-                                    <select name="address" id="address" style={{ borderRadius: '5px', border: "solid black 3px" }}>
+                                    <select name="address" id="address" required style={{ borderRadius: '5px', border: "solid black 3px" }}>
                                         <option value="" disabled selected>Choose your address</option>
                                         {address.map(item => (
                                             <option key={item.id} value={item}>{`${item.street}, ${item.district}, ${item.city}, ${item.province} ${item.postal_code} `}</option>

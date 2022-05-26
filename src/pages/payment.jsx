@@ -30,23 +30,40 @@ const Payment = () => {
 
     const uploadHandler = e => {
         e.preventDefault()
-        const data = new FormData()
-        data.append('image', paymentImg)
-        data.append('invoiceHeaderId', invoiceHeaderId)
-        // data.append('adminId', 0)
 
-        console.log(data)
-        axios.post(`${API_URL}/payment/add-payment/${userId}`, data)
-            .then(response => {
-                swal("Payment has been recorded!", response.data, "success");
-                dispatch({
-                    type: 'CART_COUNT',
-                    payload: 0
-                })
-                navigate('/')
-                localStorage.removeItem('checkoutItems')
-            })
-            .catch(error => console.log(error.message))
+        swal({
+            title: "Upload Payment?",
+            text: "Your payment will be recorded and reviewed by admins",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Payment has been recorded!", {
+                        icon: "success",
+                    });
+                    const data = new FormData()
+                    data.append('image', paymentImg)
+                    data.append('invoiceHeaderId', invoiceHeaderId)
+                    // data.append('adminId', 0)
+
+                    console.log(data)
+                    axios.post(`${API_URL}/payment/add-payment/${userId}`, data)
+                        .then(response => {
+                            swal("Payment has been recorded!", response.data, "success");
+                            dispatch({
+                                type: 'CART_COUNT',
+                                payload: 0
+                            })
+                            navigate('/')
+                            localStorage.removeItem('checkoutItems')
+                        })
+                        .catch(error => console.log(error.message))
+                } else {
+                    swal("Upload payment canceled!");
+                }
+            });
     }
 
     const cancelHandler = () => {
@@ -54,7 +71,7 @@ const Payment = () => {
             .then(response => {
                 swal({
                     title: "Are you sure want to cancel?",
-                    text: "Once deleted, your cehckout record will be deleted!",
+                    text: "Once deleted, your checkout record will be deleted!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
