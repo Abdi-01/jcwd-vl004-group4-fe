@@ -18,8 +18,9 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const Container = styled.div`
   width: 100vw;
-  height: 100%;
-  background-color: #e4e0d3;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: grey;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -103,27 +104,6 @@ const Profile = () => {
   };
 
   const params = useParams();
-
-  // const fetchUser = () => {
-  //   Axios.get(`${API_URL}/users/get-user-byId/${params.userId}`)
-  //     .then((res) => {
-  //       setUser(res.data);
-  //       // console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // };
-
-  // const fetchAddresses = () => {
-  //   Axios.get(`${API_URL}/users/get-address-byUserId/${params.userId}`)
-  //     .then((res) => {
-  //       setUserAddress(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // };
 
   useEffect(() => {
     const fetchUser = () => {
@@ -381,8 +361,6 @@ const Profile = () => {
         });
     },
   });
-
-  console.log(newUserAddress);
 
   const deleteAddressBtn = (addressId) => {
     setIdxAddress(addressId);
