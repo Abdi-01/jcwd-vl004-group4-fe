@@ -7,7 +7,6 @@ import Axios from "axios";
 import { API_URL } from "../constants/API";
 import { useSelector, useDispatch } from "react-redux";
 
-
 const Home = () => {
   const userId = useSelector((state) => state.authUserLogin.id);
   const dispatch = useDispatch();
@@ -44,17 +43,13 @@ const Home = () => {
     getProductsData();
   }, []);
 
-  // DUMMY DATA
-  // const products = useSelector(state => state.cartReducer.products)
-  // console.log(products)
-
   return (
     <div>
       <Slider />
       <h2 style={{ marginTop: "10px" }}>CATEGORIES:</h2>
       <Categories />
       <h2>NEW PRODUCTS:</h2>
-      <Products products={products}/>
+      <Products products={products} />
       <Footer />
     </div>
   );

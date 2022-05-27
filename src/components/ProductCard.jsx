@@ -5,10 +5,7 @@ import {
   ShoppingCartOutlined,
 } from "@material-ui/icons";
 import styled from "styled-components";
-import { useEffect, useState } from 'react'
-import { API_URL } from '../constants/API'
-import { useDispatch } from "react-redux";
-import { useSelector } from 'react-redux'
+import { API_URL } from "../constants/API";
 
 const Info = styled.div`
   opacity: 0;
@@ -51,7 +48,7 @@ const Circle = styled.div`
 `;
 
 const Image = styled.img`
-  height: 75%;
+  height: 50%;
   z-index: 2;
 `;
 
@@ -71,20 +68,35 @@ const Icon = styled.div`
   }
 `;
 
-const ProductDetail = ({ product }) => {
-
-  const userId = useSelector(state => state.authUserLogin.id)
-  console.log(userId);
-
-
+const ProductCard = (props) => {
   return (
-    <Container as={Link} to={`/product-detail/${product.id}`}> 
+    <Container as={Link} to={`/product-detail/${props.product.id}`}>
       <Circle />
 
       {/* DATA ASLI */}
-      <Image src={`${API_URL}/${product.image}`} />
+      <Image src={`${API_URL}/${props.product.image}`} />
       {/* DATA DUMMY */}
       {/* <Image src={product.image} /> */}
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 1000,
+          position: "absolute",
+          color: "black",
+          left: 10,
+          bottom: 0,
+          alignItems: "flex-start",
+          justifyContent: "flex-end",
+        }}
+      >
+        <p className="m-0">Name: {props.product.name}</p>
+        <p className="m-0">
+          Price: {props.product.sell_price.toLocaleString("id-ID")}
+        </p>
+        <p className="m-0">Stock: {props.product.stock} pcs</p>
+      </div>
 
       <Info>
         <Icon>
@@ -101,4 +113,4 @@ const ProductDetail = ({ product }) => {
   );
 };
 
-export default ProductDetail;
+export default ProductCard;
