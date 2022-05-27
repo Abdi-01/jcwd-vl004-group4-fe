@@ -91,11 +91,11 @@ const ProductCard = (props) => {
           justifyContent: "flex-end",
         }}
       >
-        <p className="m-0">Name: {props.product.name}</p>
+        <p className="m-0">Name: <b>{props.product.name}</b></p>
         <p className="m-0">
-          Price: {props.product.sell_price.toLocaleString("id-ID")}
+          Price: <b>{props.product.sell_price.toLocaleString("id-ID")}</b>
         </p>
-        <p className="m-0">Stock: {props.product.stock} pcs</p>
+        <p className="m-0">Stock: <b>{props.product.stock} pcs </b></p>
       </div>
 
       <Info>
