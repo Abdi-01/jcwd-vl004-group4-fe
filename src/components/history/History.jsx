@@ -119,7 +119,7 @@ const History = () => {
             <div className="footerBawah mt-3 d-flex flex-row justify-content-center">
               {val.status === "on process" ? (
                 <Button variant="success" onClick={() => confirmBtn(val.id)}>
-                  Please confirm if your item has arrived
+                  Confirm Arrived
                 </Button>
               ) : null}
             </div>
