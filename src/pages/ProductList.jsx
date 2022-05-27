@@ -47,30 +47,48 @@ const ProductList = () => {
   // contain all products data
 
   let [searchParams, setSearchParams] = useSearchParams();
-  console.log(searchParams);
+
+  // set initial page if offset exists in URL.
+  let defOffset = searchParams.get("offset");
+  let defPage = 1;
+  if (defOffset) defPage = Math.floor(defOffset / 8) + 1;
+
   const [products, setProducts] = useState([]);
-  let [page, setPage] = useState(1);
+  let [pageCount, setPageCount] = useState(1);
   // const [bestSeller, setBestSeller] = useState([]);
 
   useEffect(() => {
     getProductsData();
   }, [searchParams]);
 
+  let getParamOrDefault = (name, def) => {
+    let val = searchParams.get(name);
+    if (val) return val;
+    return def;
+  };
+
+  let defSort = getParamOrDefault("sort", "");
+  let defBottleCap = getParamOrDefault("bottlecap", "");
+  let defCategory = getParamOrDefault("category", "");
+
   const getProductsData = async () => {
     try {
+      console.log(searchParams.toString(), defCategory);
+      let sort = getSortInfo(searchParams.get("sort"));
+
       const res = await Axios.get(`${API_URL}/products/get-all-products`, {
         params: {
           category: searchParams.get("category"),
           bottle_capacity: searchParams.get("bottlecap"),
-          sortField: searchParams.get("sortField"),
-          sortDirection: searchParams.get("sortDirection"),
+          sortField: sort.field,
+          sortDirection: sort.dir,
           search: searchParams.get("name"),
           offset: searchParams.get("offset"),
         },
       });
       console.log(res.data);
       setProducts(res.data.allProducts);
-      setPage(res.data.pageCount);
+      setPageCount(res.data.pageCount);
     } catch (err) {
       console.log(err);
       swal.fire({
@@ -112,39 +130,42 @@ const ProductList = () => {
   let setSearch = (search) => {
     console.log(search);
     searchParams.set("name", search);
+    searchParams.set("offset", 0);
     setSearchParams(searchParams);
   };
 
-  let setSort = (sort) => {
-    console.log(sort);
-    if (sort == "Name (ASC)") {
-      searchParams.set("sortField", "name");
-      searchParams.set("sortDirection", "ASC");
-      setSearchParams(searchParams);
-    } else if (sort == "Name (DESC)") {
-      searchParams.set("sortField", "name");
-      searchParams.set("sortDirection", "DESC");
-      setSearchParams(searchParams);
-    } else if (sort == "Price (ASC)") {
-      searchParams.set("sortField", "sell_price");
-      searchParams.set("sortDirection", "ASC");
-      setSearchParams(searchParams);
-    } else if (sort == "Price (DESC)") {
-      searchParams.set("sortField", "sell_price");
-      searchParams.set("sortDirection", "DESC");
-      setSearchParams(searchParams);
+  let getSortInfo = (sort) => {
+    if (!sort) {
+      return {
+        field: "name",
+        dir: "ASC",
+      };
     }
+
+    return {
+      field: sort.split("-")[0],
+      dir: sort.split("-")[1].toUpperCase(),
+    };
   };
 
   let setCategory = (category) => {
     console.log(category);
     searchParams.set("category", category);
+    searchParams.set("offset", 0);
+    setSearchParams(searchParams);
+  };
+
+  let setSort = (sort) => {
+    console.log(sort);
+    searchParams.set("sort", sort);
+    searchParams.set("offset", 0);
     setSearchParams(searchParams);
   };
 
   let setBottleCap = (bottlecap) => {
     console.log(bottlecap);
     searchParams.set("bottlecap", bottlecap);
+    searchParams.set("offset", 0);
     setSearchParams(searchParams);
   };
 
@@ -155,7 +176,7 @@ const ProductList = () => {
         <Filter>
           <FilterText>Filter Products:</FilterText>
           <Select
-            defaultValue={searchParams.get("category")}
+            value={defCategory}
             onChange={(ev) => setCategory(ev.target.value)}
           >
             {/* <Option disabled selected>
@@ -166,10 +187,13 @@ const ProductList = () => {
             <Option value="capsule">Capsule</Option>
             <Option value="liquid">Liquid</Option>
           </Select>
-          <Select onChange={(ev) => setBottleCap(ev.target.value)}>
-            <Option disabled selected>
+          <Select
+            value={defBottleCap}
+            onChange={(ev) => setBottleCap(ev.target.value)}
+          >
+            {/* <Option disabled selected>
               Bottle Capacity:
-            </Option>
+            </Option> */}
             <Option value="">Show All</Option>
             <Option value="500">500</Option>
             <Option value="300">300</Option>
@@ -178,15 +202,13 @@ const ProductList = () => {
         </Filter>
         <Filter>
           <FilterText>Sort Products:</FilterText>
-          <Select onChange={(ev) => setSort(ev.target.value)}>
-            <Option selected value="Name (ASC)">
-              Default
-            </Option>
-            <Option value="Price (ASC)">Price (ASC)</Option>
-            <Option value="Price (DESC)">Price (DESC)</Option>
-            <Option value="Name (ASC)">A - Z</Option>
-            <Option value="Name (DESC)">Z - A</Option>
-            <Option value="Best Seller">Best Seller</Option>
+          <Select value={defSort} onChange={(ev) => setSort(ev.target.value)}>
+            <Option value="">Default</Option>
+            <Option value="sell_price-asc">Price (ASC)</Option>
+            <Option value="sell_price-desc">Price (DESC)</Option>
+            <Option value="name-asc">A - Z</Option>
+            <Option value="name-desc">Z - A</Option>
+            {/* <Option value="Best Seller">Best Seller</Option> */}
           </Select>
         </Filter>
         <Filter>
@@ -194,13 +216,15 @@ const ProductList = () => {
           <Input
             onChange={(ev) => setSearch(ev.target.value)}
             type="text"
+            defaultValue={searchParams.get("name")}
           ></Input>
         </Filter>
       </FilterContainer>
-      <Products products={products}/>
+      <Products products={products} />
       <Stack direction="row" justifyContent="center" spacing={2}>
         <Pagination
-          count={page}
+          page={defPage}
+          count={pageCount}
           variant="outlined"
           siblingCount={1}
           shape="rounded"
