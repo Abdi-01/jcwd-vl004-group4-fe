@@ -93,7 +93,7 @@ function Row(props) {
         <TableCell>
           <Image
             src={
-              "http://localhost:5000/" + transaction.payment_confirmation.image
+              API_URL + transaction.payment_confirmation.image
             }
           />
         </TableCell>

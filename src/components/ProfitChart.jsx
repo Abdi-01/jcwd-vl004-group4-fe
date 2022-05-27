@@ -9,6 +9,7 @@ import {
   VictoryTheme,
   VictoryStack,
 } from "victory";
+import { API_URL } from "../constants/API";
 
 export const ProfitChart = (props) => {
   console.log(props);
@@ -18,7 +19,7 @@ export const ProfitChart = (props) => {
   let fetchProfit = async () => {
     try {
       let res = await Axios.get(
-        "http://localhost:5000/report/get-profit-chart",
+        API_URL+"/report/get-profit-chart",
         {
           params: {
             min: props.startDate,

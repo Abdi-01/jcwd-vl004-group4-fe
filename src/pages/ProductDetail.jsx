@@ -256,7 +256,7 @@ const ProductDetail = () => {
           <>
             <ImgContainer>
               {/* bcs productDetail.image is in backend} */}
-              <Image src={"http://localhost:5000/" + productDetail.image} />
+              <Image src={API_URL + productDetail.image} />
             </ImgContainer>
             <InfoContainer>
               <Title>{productDetail.name}</Title>
