@@ -3,6 +3,8 @@ import Axios from "axios";
 import { API_URL } from "../../constants/API";
 import { useParams } from "react-router-dom";
 import { Card, Table, Row, Pagination } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 const History = () => {
   const [data, setData] = useState([]);
@@ -12,7 +14,20 @@ const History = () => {
 
   const params = useParams();
 
-  console.log(data);
+  const confirmBtn = (id) => {
+    Axios.post(`${API_URL}/transaction/approve-transaction/${params.userId}`, {
+      id: id,
+    })
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: res.data.message,
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   const renderTransactionHistory = () => {
     const beginningIdx = (page - 1) * itemPerPage;
@@ -26,22 +41,31 @@ const History = () => {
           <Card.Header className="d-flex flex-row justify-content-between">
             <div className="kiri">Invoice Code: {val.invoice_code}</div>
             <div className="kanan">
-              {val.status === "paid" ? (
-                <span className="badge bg-success">Approved</span>
+              {val.status === "on process" ? (
+                <span className="badge bg-warning">On Process Delivery</span>
               ) : null}
               {val.status === "pending" ? (
                 <span className="badge bg-warning">Pending</span>
               ) : null}
               {val.status === "unpaid" ? (
-                <span className="badge bg-danger">Unpaid</span>
+                <span className="badge bg-warning">Unpaid</span>
+              ) : null}
+              {val.status === "rejected" ? (
+                <span className="badge bg-danger">Rejected</span>
+              ) : null}
+              {val.status === "completed" ? (
+                <span className="badge bg-success">Completed</span>
               ) : null}
             </div>
           </Card.Header>
           <Card.Header className="d-flex flex-row justify-content-between">
             <div className="kiri">
-              Date: {val.createdAt.slice(0, val.createdAt.length - 14)}
+              Date: {new Date(val.createdAt).toLocaleDateString("id-ID")}
             </div>
-            <div className="kanan">Time: {val.createdAt.slice(11, 16)}</div>
+            <div className="kanan">
+              Time:{" "}
+              {new Date(val.createdAt).toLocaleTimeString("id-ID").slice(0, 5)}
+            </div>
           </Card.Header>
           <Card.Body>
             <Table striped bordered>
@@ -72,21 +96,33 @@ const History = () => {
                       </td>
                       <td>{item.product.name}</td>
                       <td>{item.qty}</td>
-                      <td>{item.price.toLocaleString("id-ID")}</td>
-                      <td>{(item.qty * item.price).toLocaleString("id-ID")}</td>
+                      <td>Rp. {item.price.toLocaleString("id-ID")}</td>
+                      <td>
+                        Rp. {(item.qty * item.price).toLocaleString("id-ID")}
+                      </td>
                     </tr>
                   );
                 })}
               </tbody>
             </Table>
           </Card.Body>
-          <Card.Footer className="d-flex flex-row justify-content-around">
-            <Row>
-              Shipping Price: {data[0].shipping_price.toLocaleString("id-ID")}
-            </Row>
-            <Row>
-              Sub Total: {data[index].total_price.toLocaleString("id-ID")}
-            </Row>
+          <Card.Footer>
+            <div className="footerAtas d-flex flex-row justify-content-around">
+              <Row>
+                Shipping Price: Rp.{" "}
+                {data[0].shipping_price.toLocaleString("id-ID")}
+              </Row>
+              <Row>
+                Sub Total: Rp. {data[index].total_price.toLocaleString("id-ID")}
+              </Row>
+            </div>
+            <div className="footerBawah mt-3 d-flex flex-row justify-content-center">
+              {val.status === "on process" ? (
+                <Button variant="success" onClick={() => confirmBtn(val.id)}>
+                  Please confirm if your item has arrived
+                </Button>
+              ) : null}
+            </div>
           </Card.Footer>
         </Card>
       );
@@ -110,7 +146,7 @@ const History = () => {
       Axios.get(`${API_URL}/users/get-transaction-history/${params.userId}`)
         .then((res) => {
           setData(res.data);
-          console.log(res.data.length);
+          // console.log(res.data.length);
           setMaxPage(Math.ceil(res.data.length / itemPerPage));
         })
         .catch((err) => {
@@ -118,7 +154,7 @@ const History = () => {
         });
     };
     fetchTransactionHistory();
-  }, [itemPerPage, params.userId]);
+  }, [itemPerPage, params.userId, data]);
 
   return (
     <div>
