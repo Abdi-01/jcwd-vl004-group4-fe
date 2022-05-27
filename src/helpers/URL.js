@@ -1,3 +1,3 @@
-const URL = "http://localhost:5000/"
+const URL = "https://jcwdvl00404api.purwadhikabootcamp.com/"
 
 export default URL
