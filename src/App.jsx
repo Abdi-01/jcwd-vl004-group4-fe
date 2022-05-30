@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -16,7 +16,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MyNavbar from "./components/MyNavbar";
 
 import List from "./pages/admin/list/List";
-import Admin from "./pages/Admin";
 import ProductAdmin from "./components/admin/products/Product";
 import AdminLogin from "./pages/admin/AdminLogin";
 import Verification from "./pages/Verification";
@@ -38,10 +37,7 @@ import RegisterAdmin from "./pages/admin/register/RegisterAdmin";
 import AboutUs from "./pages/AboutUs";
 
 const App = () => {
-  const [user,setUser] = useState()
-  const [admin, setAdmin] = useState() // it is not used
   const dispatch = useDispatch();
-  let [tokenChecked, setTokenChecked] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token_shutter")) {
@@ -50,7 +46,9 @@ const App = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token_shutter")
+            )}`,
           },
         }
       )
@@ -61,44 +59,39 @@ const App = () => {
             type: "USER_LOGIN_SUCCESS",
             payload: res.data.dataLogin,
           });
-          setTokenChecked(true);
         })
         .catch((err) => {
           console.log(err);
-          setTokenChecked(true);
         });
-    } else if (localStorage.getItem("token_shutter_admin")) {
-      const loggedInAdmin = localStorage.getItem("token_shutter_admin");
-      if (loggedInAdmin) {
-        Axios.post(
-          `${API_URL}/admin/keep-login`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${loggedInAdmin}`,
-            },
-          }
-        )
-          .then((res) => {
-            localStorage.setItem("token_shutter_admin", res.data.token);
-            dispatch({
-              type: "ADMIN_LOGIN_SUCCESS",
-              payload: res.data.dataLogin,
-            });
-            console.log("admin logged in");
-            setTokenChecked(true);
-          })
-          .catch((err) => {
-            console.log(err);
-            setTokenChecked(true);
-          });
-      }
-    } else {
-      setTokenChecked(true);
     }
-  }, []);
-
-  if (!tokenChecked) return <></>;
+    if (localStorage.getItem("token_shutter_admin")) {
+      Axios.post(
+        `${API_URL}/admin/keep-login`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token_shutter_admin")
+            )}`,
+          },
+        }
+      )
+        .then((res) => {
+          // console.log(res.data);
+          localStorage.setItem(
+            "token_shutter_admin",
+            JSON.stringify(res.data.token)
+          );
+          dispatch({
+            type: "ADMIN_LOGIN_SUCCESS",
+            payload: res.data.dataLogin,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [dispatch]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -129,17 +122,6 @@ const App = () => {
           />
           <Route element={<DisplayReport />} path="/admin/display-report" />
           <Route element={<FilterReport />} path="/admin/filter-report" />
-          <Route element={<Admin />} path="/admin" />
-          <Route element={<AdminLogin />} path="/admin/login" />
-          <Route
-            element={<AdminForgetPassword />}
-            path="/admin/forget-password"
-          />
-          <Route
-            element={<AdminResetPassword />}
-            path="/admin/reset-password/:token"
-          />
-          <Route element={<Admin />} path="/admin" />
           <Route element={<AdminLogin />} path="/admin/login" />
           <Route
             element={<AdminForgetPassword />}

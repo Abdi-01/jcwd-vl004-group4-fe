@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Categories from "../components/Categories";
 import Footer from "../components/Footer";
-import ProductDetail from "../components/ProductDetail";
+import Products from "../components/Products";
 import Slider from "../components/Slider";
-import styled from "styled-components";
 import Axios from "axios";
-import { API_URL } from '../constants/API'
+import { API_URL } from "../constants/API";
 import { useSelector, useDispatch } from "react-redux";
-
-const ContainerProduct = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
 
 const Home = () => {
   const userId = useSelector((state) => state.authUserLogin.id);
@@ -51,21 +43,13 @@ const Home = () => {
     getProductsData();
   }, []);
 
-  // DUMMY DATA
-  // const products = useSelector(state => state.cartReducer.products)
-  // console.log(products)
-
   return (
     <div>
       <Slider />
       <h2 style={{ marginTop: "10px" }}>CATEGORIES:</h2>
       <Categories />
       <h2>NEW PRODUCTS:</h2>
-      <ContainerProduct>
-        {products.map((product) => (
-          <ProductDetail product={product} key={product.id} />
-        ))}
-      </ContainerProduct>
+      <Products products={products} />
       <Footer />
     </div>
   );

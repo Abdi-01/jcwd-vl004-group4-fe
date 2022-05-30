@@ -27,10 +27,18 @@ const Datatable = () => {
     Axios.patch(`${API_URL}/admin/deactivate-user`, { id: id })
       .then((res) => {
         Swal.fire({
-          icon: "success",
-          title: res.data.message,
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, deactivate user",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire("Deactivated", "User has been deactivated", "success");
+            setData(res.data.data);
+          }
         });
-        setData(res.data.data);
       })
       .catch((err) => console.log(err.message));
   };
@@ -39,10 +47,18 @@ const Datatable = () => {
     Axios.patch(`${API_URL}/admin/activate-user`, { id: id })
       .then((res) => {
         Swal.fire({
-          icon: "success",
-          title: res.data.message,
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, activate user",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire("Activated", "User has been Activated", "success");
+            setData(res.data.data);
+          }
         });
-        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err.message);
@@ -73,7 +89,7 @@ const Datatable = () => {
     },
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Email Status",
       width: 160,
       renderCell: (params) => {
         return (
@@ -85,7 +101,7 @@ const Datatable = () => {
     },
     {
       field: "is_active",
-      headerName: "Active",
+      headerName: "User Status",
       width: 100,
       renderCell: (params) => {
         return <div>{params.row.is_active ? "Active" : "Inactive"}</div>;
