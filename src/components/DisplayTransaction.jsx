@@ -28,25 +28,47 @@ const Image = styled.img`
 function Row(props) {
   const { transaction } = props;
   const [open, setOpen] = React.useState(false);
-  const admin = useSelector((state) => state.authAdminLogin);
 
-  const buttonHandler = async (is_confirmed, row) => {
-    try {
-      let res = await Axios.post(`${API_URL}/transaction/update-transaction`, {
-        headerId: row.id,
-        is_confirmed: is_confirmed,
-        adminId: admin.id,
-      });
-      props.refreshData();
-    } catch (e) {
-      console.log(e.message);
-      swal.fire({
-        title: "There is some mistake in server",
+  const buttonHandler = (is_confirmed, row) => {
+    swal
+      .fire({
+        title: `Are you sure you want to ${
+          is_confirmed ? "approve" : "reject"
+        }?`,
         icon: "warning",
-        confirm: true,
+        confirmButtonText: "Yes",
+        showConfirmButton: true,
+        showCancelButton: true,
+      })
+      .then(async (swalRes) => {
+        if (!swalRes.isConfirmed) return;
+
+        try {
+          let res = await Axios.post(
+            `${API_URL}/transaction/update-transaction`,
+            {
+              headerId: row.id,
+              is_confirmed: is_confirmed,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${JSON.parse(
+                  localStorage.getItem("token_shutter_admin")
+                )}`,
+              },
+            }
+          );
+          props.refreshData();
+        } catch (e) {
+          console.log(e.message);
+          swal.fire({
+            title: "There is some mistake in server",
+            icon: "warning",
+            confirm: true,
+          });
+          return;
+        }
       });
-      return;
-    }
   };
 
   let getColor = (transaction) => {

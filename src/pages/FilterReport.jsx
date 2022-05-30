@@ -24,13 +24,14 @@ const FilterReport = () => {
     revenue: 0,
     profit: 0,
     cost: 0,
+    topProducts: [],
   });
 
   console.log(JSON.stringify(summary));
 
   let fetchSummary = async () => {
-    if (!admin.id) {
-      console.log("null admin");
+    if (!localStorage.getItem("token_shutter_admin")) {
+      console.log("null admin token");
       swal
         .fire({
           title: "You don't have access to this page",
@@ -45,6 +46,11 @@ const FilterReport = () => {
 
     try {
       let res = await Axios.get(`${API_URL}/report/get-filter-report`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("token_shutter_admin")
+          )}`,
+        },
         params: {
           min: startDate,
           max: endDate,
@@ -69,12 +75,11 @@ const FilterReport = () => {
     console.log(startDate);
     console.log(endDate);
     if (startDate > endDate) {
-      swal
-        .fire({
-          title: "End date should be greater than start date",
-          icon: "warning",
-          confirm: true,
-        })
+      swal.fire({
+        title: "End date should be greater than start date",
+        icon: "warning",
+        confirm: true,
+      });
       return;
     } else {
       fetchSummary();
@@ -90,7 +95,6 @@ const FilterReport = () => {
     >
       <Sidebar />
       <div
-        classNameName="container"
         style={{
           marginTop: "70px",
           display: admin.id ? "block" : "none",
@@ -98,7 +102,9 @@ const FilterReport = () => {
         }}
       >
         <div className="tabcontent">
-          <span style={{ color: "#0e4c95", fontWeight: "bold", marginLeft: "10px" }}>
+          <span
+            style={{ color: "#0e4c95", fontWeight: "bold", marginLeft: "10px" }}
+          >
             Select Dates:
           </span>
           <DatePicker
@@ -126,48 +132,81 @@ const FilterReport = () => {
         <div className="row m-5">
           <div className="col-sm fw-3 ">
             <Card>
-              <p className="pb-0 p-3 fw-bold fs-5 text-info">
+              <p className="pb-3 p-3 fw-bold fs-5 text-info">
                 Number of Sales:{" "}
               </p>
-              <p className="ps-3 fs-5 text-warning">
+              <p className="ps-3 pb-5 fs-5 text-warning">
                 {summary.numberOfSales.toLocaleString("id-ID")}
               </p>
             </Card>
           </div>
+          
           <div className="col-sm">
             <Card>
-              <p className="pb-0 p-3 fw-bold fs-5 text-info">Revenue: </p>
-              <p className="ps-3 fs-5 text-warning">
+              <p className="pb-3 p-3 fw-bold fs-5 text-info">Revenue: </p>
+              <p className="ps-3 pb-5 fs-5 text-warning">
                 {summary.revenue.toLocaleString("id-ID")}
               </p>
             </Card>
           </div>
           <div className="col-sm">
             <Card>
-              <p className="pb-0 p-3 fw-bold fs-5 text-info">Profit: </p>
-              <p className="ps-3 fs-5 text-warning">
+              <p className="pb-3 p-3 fw-bold fs-5 text-info">Profit: </p>
+              <p className="ps-3 pb-5 fs-5 text-warning">
                 {summary.profit.toLocaleString("id-ID")}
               </p>
             </Card>
           </div>
           <div className="col-sm">
             <Card>
-              <p className="pb-0 p-3 fw-bold fs-5 text-info">Cost: </p>
-              <p className="ps-3 fs-5 text-warning">
+              <p className="pb-3 p-3 fw-bold fs-5 text-info">Cost: </p>
+              <p className="ps-3 pb-5 fs-5 text-warning">
                 {summary.cost.toLocaleString("id-ID")}
+              </p>
+            </Card>
+          </div>
+          <div className="col-sm fw-3 ">
+            <Card>
+              <p className="pb-0 p-3 fw-bold fs-5 text-info">
+                Top 3 Products:{" "}
+              </p>
+              <p className="ps-2 fs-5 pl-0 text-warning">
+                <ol>
+                  {summary.topProducts.map((prd) => {
+                    return <li>{prd.name}</li>;
+                  })}
+                </ol>
               </p>
             </Card>
           </div>
         </div>
         <div className="row">
           <div style={{ fontWeight: "bold", color: "#23cde8" }}>
-            <span style={{ marginLeft: "130px", textAlign: "center", fontSize: "17px"}}>
+            <span
+              style={{
+                marginLeft: "130px",
+                textAlign: "center",
+                fontSize: "17px",
+              }}
+            >
               Revenue in Million (Rp)
             </span>
-            <span style={{ marginLeft: "260px", textAlign: "center", fontSize: "17px" }}>
+            <span
+              style={{
+                marginLeft: "260px",
+                textAlign: "center",
+                fontSize: "17px",
+              }}
+            >
               Profit in Million (Rp)
             </span>
-            <span style={{ marginLeft: "260px", textAlign: "center", fontSize: "17px" }}>
+            <span
+              style={{
+                marginLeft: "260px",
+                textAlign: "center",
+                fontSize: "17px",
+              }}
+            >
               Costs Proportion
             </span>
           </div>

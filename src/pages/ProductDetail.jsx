@@ -4,8 +4,8 @@ import styled from "styled-components";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { API_URL } from "../constants/API";
-import axios from 'axios'
-import swal2 from 'sweetalert'
+import axios from "axios";
+import swal2 from "sweetalert";
 
 import { useState, useEffect } from "react";
 import swal from "sweetalert2";
@@ -109,9 +109,7 @@ const ProductDetail = () => {
     image: "",
   });
 
-
-  const userToken = localStorage.getItem('token_shutter')
-
+  const userToken = localStorage.getItem("token_shutter");
 
   const [productNotFound, setProductNotFound] = useState(true);
   let navigate = useNavigate();
@@ -120,47 +118,47 @@ const ProductDetail = () => {
   console.log(userGlobal);
 
   const params = useParams();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const addToCart = () => {
-
     // login is required
     if (!userToken) {
       swal2("Log in is required!");
-      navigate('/login')
+      navigate("/login");
     } else {
       const data = {
         qty: quantity,
         userId: userGlobal.id,
-        productId: productDetail.id
-      }
-      axios.post(`${API_URL}/cart/add-cart`, data)
-        .then(response => {
-          console.log(response.data)
+        productId: productDetail.id,
+      };
+      axios
+        .post(`${API_URL}/cart/add-cart`, data)
+        .then((response) => {
+          console.log(response.data);
           if (response.data.conflict) {
-            return swal2(response.data.warning, response.data.conflict, "error");
+            return swal2(
+              response.data.warning,
+              response.data.conflict,
+              "error"
+            );
           } else if (response.data.count) {
             dispatch({
               type: "CART_COUNT",
-              payload: response.data.count
-            })
+              payload: response.data.count,
+            });
           }
           swal2("Success!", response.data.message, "success");
-
         })
-        .catch(err => {
-          console.log(err.message)
+        .catch((err) => {
+          console.log(err.message);
           swal2("Failed!", "Input quantity exceeds item stock!", "error");
-        })
+        });
     }
-
-  }
+  };
 
   // to get product detail
   const fetchProductDetail = () => {
-    Axios.get(
-      `${API_URL}/products/get-product-byId/` + params.productId
-    )
+    Axios.get(`${API_URL}/products/get-product-byId/` + params.productId)
       .then((result) => {
         if (result.status == 200) {
           setProductDetail(result.data);
@@ -275,7 +273,7 @@ const ProductDetail = () => {
                   <Amount>{quantity}</Amount>
                   <Add onClick={() => qtyHandler("increment")} />
                 </AmountContainer>
-                <Button onClick={addToCart} >ADD TO CART</Button>
+                <Button onClick={addToCart}>ADD TO CART</Button>
               </AddContainer>
             </InfoContainer>
           </>
